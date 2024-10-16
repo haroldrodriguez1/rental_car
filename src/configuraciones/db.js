@@ -1,8 +1,8 @@
 const sequelize = require('sequelize');
 const db = new sequelize(
-    "rental",//nombre de la base de datos
-    "root",//usuario de la base de datos
-    "hola",//contrasena
+    process.env.NOMBRE_DB,//nombre de la base de datos
+    process.env.USUARIO_DB,//usuario de la base de datos
+    process.env.CONTRASENA_DB,//contrasena
     {
         host: "localhost",
         dialect: "mysql",
