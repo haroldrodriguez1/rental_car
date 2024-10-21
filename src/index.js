@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const modeloSeguro = require('./modelos/seguro');
+
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 require('dotenv').config();
@@ -11,6 +13,10 @@ const db = require('./configuraciones/db');
 db.authenticate()
 .then( async (data)=>{
     console.log("Conexion correcta con la base de datos");
+
+    await modeloSeguro.sync().then((data)=>{
+        console.log("Modelo seguro creado correctamente");
+    });
     
 })
 .catch((er)=>{
@@ -32,6 +38,8 @@ app.use(cors(require('./configuraciones/cors')));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use('/api', require('./rutas'));
+app.use('/api/seguro', require('./rutas/rutasSeguro'));
+
 app.listen(process.env.PORT, ()=>{
     console.log('Servidor iniciado en el puerto ' + process.env.PORT);
 });
