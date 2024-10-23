@@ -21,18 +21,19 @@ db.authenticate()
     modeloPago.hasMany(modeloRenta)
     modeloRenta.belongsTo(modeloPago)
 
-    modeloMantenimiento.hasMany(modeloVehiculo)
-    modeloVehiculo.belongsTo(modeloMantenimiento)
+    modeloVehiculo.hasMany(modeloMantenimiento)
+    modeloMantenimiento.belongsTo(modeloVehiculo)
 
     await modeloSeguro.sync().then((data)=>{
         console.log("Modelo seguro creado correctamente");
     });
-    await modeloMantenimiento.sync().then((data)=>{
-        console.log("modelo mantenimiento creado correctamente")
-    })
     await modeloVehiculo.sync().then((data)=>{
         console.log("Modelo vehiculo creado correctamente");
     });
+    await modeloMantenimiento.sync().then((data)=>{
+        console.log("modelo mantenimiento creado correctamente")
+    })
+    
    
     await modeloRenta.sync().then((data)=>{
         console.log("Modelo renta creado correctamente");
