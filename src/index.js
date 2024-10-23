@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const modeloSeguro = require('./modelos/seguro');
+const modeloRenta = require('./modelos/renta');
+const modeloVehiculo = require('./modelos/vehiculo');
 
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
@@ -16,6 +18,12 @@ db.authenticate()
 
     await modeloSeguro.sync().then((data)=>{
         console.log("Modelo seguro creado correctamente");
+    });
+    await modeloRenta.sync().then((data)=>{
+        console.log("Modelo renta creado correctamente");
+    });
+    await modeloVehiculo.sync().then((data)=>{
+        console.log("Modelo vehiculo creado correctamente");
     });
     
 })
@@ -39,6 +47,8 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use('/api', require('./rutas'));
 app.use('/api/seguro', require('./rutas/rutasSeguro'));
+app.use('/api/renta', require('./rutas/rutasRenta'));
+app.use('/api/vehiculo', require('./rutas/rutasVehiculo'));
 
 app.listen(process.env.PORT, ()=>{
     console.log('Servidor iniciado en el puerto ' + process.env.PORT);
