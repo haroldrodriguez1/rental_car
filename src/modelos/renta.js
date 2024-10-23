@@ -15,7 +15,7 @@ const Renta = db.define(
       allowNull: false,
       references: {
         model: 'vehiculos',
-        key: 'id',
+        key: 'vehiculoId',
       },
     },
     clienteId: {
