@@ -6,8 +6,8 @@ const modeloRenta = require('./modelos/renta');
 const modeloVehiculo = require('./modelos/vehiculo');
 const modeloPago = require('./modelos/pago')
 const modeloMantenimiento = require('./modelos/mantenimiento')
-const modeloMantenimiento = require('./modelos/usuario')
-const modeloMantenimiento = require('./modelos/empleado')
+const modeloUsuario = require('./modelos/usuario')
+const modeloEmpleado = require('./modelos/empleado')
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 require('dotenv').config();
