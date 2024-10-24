@@ -6,7 +6,8 @@ const modeloRenta = require('./modelos/renta');
 const modeloVehiculo = require('./modelos/vehiculo');
 const modeloPago = require('./modelos/pago')
 const modeloMantenimiento = require('./modelos/mantenimiento')
-
+const modeloMantenimiento = require('./modelos/usuario')
+const modeloMantenimiento = require('./modelos/empleado')
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 require('dotenv').config();
@@ -43,6 +44,13 @@ db.authenticate()
         console.log("modelo pago creado correctamente")
     })
     
+    await modeloUsuario.sync().then((data)=>{
+        console.log("modelo usuario creado correctamente")
+    })
+
+    await modeloEmpleado.sync().then((data)=>{
+        console.log("modelo empleado creado correctamente")
+    })
 })
 .catch((er)=>{
     console.log("Error al conectar la base de datos " + er);
@@ -66,6 +74,8 @@ app.use('/api', require('./rutas'));
 app.use('/api/seguro', require('./rutas/rutasSeguro'));
 app.use('/api/renta', require('./rutas/rutasRenta'));
 app.use('/api/vehiculo', require('./rutas/rutasVehiculo'));
+app.use('/api/usuario', require('./rutas/rutasUsuario'));
+app.use('/api/empleado', require('./rutas/rutasEmpleado'));
 
 app.listen(process.env.PORT, ()=>{
     console.log('Servidor iniciado en el puerto ' + process.env.PORT);
