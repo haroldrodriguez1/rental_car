@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { body, query } = require('express-validator');
 const modeloRenta = require('../modelos/renta');
 const controladorRenta = require('../controladores/controladorRenta');
+const modeloVehiculo = require('../modelos/vehiculo');
 const ruta = Router();
 
 ruta.get('/', controladorRenta.inicio);
@@ -9,21 +10,21 @@ ruta.get('/', controladorRenta.inicio);
 ruta.get('/listar', controladorRenta.listar);
 
 ruta.post('/guardar',
-    body("cliente").isLength({ min: 3, max: 50 }).withMessage("El nombre del cliente debe tener entre 3 y 50 caracteres")
+    body("cliente").isLength({ min: 1, max: 50 }).withMessage("El nombre del cliente debe tener entre 3 y 50 caracteres")
         .custom(async value => {
             if (!value) {
                 throw new Error('El nombre del cliente no puede ser nulo');
             }
         }),
-    body("vehiculoid").isInt().withMessage("El ID del vehículo debe ser un valor entero")
-        .custom(async value => {
-            const buscarVehiculo = await modeloRenta.findOne({ where: { vehiculoid: value } });
-            if (!buscarVehiculo) {
-                throw new Error('El ID del vehículo no existe');
-            }
-        }),
-    body("fechainicio").isISO8601().withMessage("La fecha de inicio debe ser válida"),
-    body("fechafin").isISO8601().withMessage("La fecha de fin debe ser válida"),
+         body("vehiculoid").isInt().withMessage("El ID del vehículo debe ser un valor entero")
+            .custom(async value => {
+                const buscarVehiculo = await modeloVehiculo.findOne({ where: { vehiculoid: value } });
+                if (!buscarVehiculo) {
+                    throw new Error('El ID del vehículo no existe');
+                }
+            }),
+     /*body("fechainicio").isISO8601().withMessage("La fecha de inicio debe ser válida"),
+    body("fechafin").isISO8601().withMessage("La fecha de fin debe ser válida"), */
     controladorRenta.guardar
 );
 

@@ -2,37 +2,31 @@ const { DataTypes } = require('sequelize');
 const db = require('../configuraciones/db');
 
 const Renta = db.define(
-  "renta",
+  "renta", 
   {
-    Rentaid: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-    vehiculoId: {
+    vehiculoid: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'vehiculos',
-        key: 'vehiculoId',
+        key: 'vehiculoid',
       },
     },
     clienteId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'clientes',
-        key: 'id',
-      },
-    },
-    seguro: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        isInt: true,
+         model: 'clientes',
+        key: 'id', 
       }
-      },
+    },
+
     fechaInicio: {
       type: DataTypes.DATE,
       allowNull: false,

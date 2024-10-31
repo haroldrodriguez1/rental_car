@@ -1,5 +1,11 @@
 const modeloRenta = require('../modelos/renta');
 const { validationResult } = require('express-validator');
+const db = require('../configuraciones/db');
+const modeloSeguro = require('../modelos/seguro');
+const modeloServicio = require('../modelos/servicioAdicional');
+
+
+
 
 exports.inicio = (req, res) => {
     var info = {
@@ -25,7 +31,12 @@ exports.inicio = (req, res) => {
 
 exports.listar = async (req, res) => {
     try {
-        await modeloRenta.findAll()
+        await modeloRenta.findAll({
+            include:[
+                modeloSeguro,
+                modeloServicio
+            ]
+        })
             .then((data) => {
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
@@ -57,13 +68,20 @@ exports.guardar = async (req, res) => {
         res.json({ ers });
     } else {
         try {
-            await modeloRenta.create({ ...req.body })
-                .then((data) => {
+            const {servicioAdicionalId} = req.body;
+            const t = await db.transaction();
+            
+            
+            await modeloRenta.create({ ...req.body },{transaction: t})
+                .then( async (data) => {
+                    
+                    await t.commit();
                     res.statusCode = 201;
                     res.setHeader("Content-Type", "application/json");
                     res.json({ msg: "Registro de renta guardado", data });
                 })
-                .catch((er) => {
+                .catch(async (er) => {
+                    await t.rollback(); 
                     console.log(er);
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "application/json");
@@ -114,7 +132,7 @@ exports.modificar = async (req, res) => {
         }
     }
 }
-
+ 
 exports.eliminar = async (req, res) => {
     const errores = validationResult(req);
     var ers = [];

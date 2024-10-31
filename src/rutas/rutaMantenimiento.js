@@ -43,7 +43,7 @@ const rutas = Router();
  *                   fecha_mantenimiento:
  *                     type: date
  *                     description: Indica la fecha del mantenimiento
- *                   vehiculoId:
+ *                   vehiculoid:
  *                     type: integer
  *                     description: Indicador unico del vehiculo
 *        400:
@@ -105,7 +105,7 @@ rutas.get('/listar', controladorMantenimiento.listar)
  *                   fecha_mantenimiento:
  *                     type: date
  *                     description: Indica la fecha del mantenimiento
- *                   vehiculoId:
+ *                   vehiculoid:
  *                     type: integer
  *                     description: Indicador unico del vehiculo
  *       400:
@@ -179,7 +179,7 @@ rutas.get('/buscaridmantenimiento',
  *                   fecha_mantenimiento:
  *                     type: date
  *                     description: Indica la fecha del mantenimiento
- *                   vehiculoId:
+ *                   vehiculoid:
  *                     type: integer
  *                     description: Indicador unico del vehiculo
  *     responses:
@@ -208,7 +208,7 @@ rutas.get('/buscaridmantenimiento',
  *                   fecha_mantenimiento:
  *                     type: date
  *                     description: Indica la fecha del mantenimiento
- *                   vehiculoId:
+ *                   vehiculoid:
  *                     type: integer
  *                     description: Indicador unico del vehiculo
  *       400:
@@ -257,7 +257,7 @@ rutas.post('/guardar',
         }
     }), 
     body("fecha_pago").isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
-    body("vehiculoId").isInt().withMessage("El id del vehiculo debe ser un numero entero"),
+    body("vehiculoid").isInt().withMessage("El id del vehiculo debe ser un numero entero"),
     controladorMantenimiento.guardar)
 
 /**
@@ -293,7 +293,7 @@ rutas.post('/guardar',
  *                   fecha_mantenimiento:
  *                     type: date
  *                     description: Indica la fecha del mantenimiento (opcional)
- *                   vehiculoId:
+ *                   vehiculoid:
  *                     type: integer
  *                     description: Indicador unico del vehiculo (opcional)
  *     responses:
@@ -322,7 +322,7 @@ rutas.post('/guardar',
  *                   fecha_mantenimiento:
  *                     type: date
  *                     description: Indica la fecha del mantenimiento
- *                   vehiculoId:
+ *                   vehiculoid:
  *                     type: integer
  *                     description: Indicador unico del vehiculo
  *       400:
@@ -373,7 +373,7 @@ rutas.put('/editar',
         }
     }), 
     body("fecha_pago").optional().isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
-    body("vehiculoId").optional().isInt().withMessage("El id del vehiculo debe ser un numero entero"),
+    body("vehiculoid").optional().isInt().withMessage("El id del vehiculo debe ser un numero entero"),
         controladorMantenimiento.modificar)
 
 

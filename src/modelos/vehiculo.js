@@ -4,7 +4,7 @@ const db = require('../configuraciones/db');
 const Vehiculo = db.define(
   "vehiculo",
   {
-    Vehiculoid: {
+    vehiculoid: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -22,6 +22,7 @@ const Vehiculo = db.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    
     precioPorDia: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
