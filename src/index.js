@@ -6,6 +6,8 @@ const modeloRenta = require('./modelos/renta');
 const modeloVehiculo = require('./modelos/vehiculo');
 const modeloPago = require('./modelos/pago')
 const modeloMantenimiento = require('./modelos/mantenimiento')
+const modeloServicio = require('./modelos/servicioAdicional')
+
 
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
