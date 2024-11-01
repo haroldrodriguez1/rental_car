@@ -4,6 +4,126 @@ const modeloSeguro = require('../modelos/seguro');
 const controladorSeguro = require('../controladores/controladorSeguro');
 const ruta = Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Seguros
+ *   description: API para gestionar seguros
+ */
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Información general de las rutas de seguro
+ *     tags: [Seguros]
+ *     responses:
+ *       200:
+ *         description: Información general de las rutas
+ */
+
+/**
+ * @swagger
+ * /seguro/listar:
+ *   get:
+ *     summary: Lista todos los seguros
+ *     tags: [Seguros]
+ *     responses:
+ *       200:
+ *         description: Lista de seguros
+ */
+
+/**
+ * @swagger
+ * /seguro/guardar:
+ *   post:
+ *     summary: Guarda un nuevo seguro
+ *     tags: [Seguros]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: "Seguro de Vida"
+ *               tipo:
+ *                 type: string
+ *                 example: "Vida"
+ *               descripcion:
+ *                 type: string
+ *                 example: "Seguro de vida con cobertura total"
+ *               cobertura:
+ *                 type: string
+ *                 example: "Cobertura total"
+ *               precio:
+ *                 type: number
+ *                 format: float
+ *                 example: 100.00
+ *               estado:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       201:
+ *         description: Registro guardado
+ *       400:
+ *         description: Error en la validación
+ */
+
+/**
+ * @swagger
+ * /seguro/editar:
+ *   put:
+ *     summary: Modifica un seguro existente
+ *     tags: [Seguros]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         description: ID del seguro a modificar
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: "Seguro de Vida"
+ *               estado:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Registro actualizado
+ *       400:
+ *         description: Error en la validación
+ */
+
+/**
+ * @swagger
+ * /seguro/eliminar:
+ *   delete:
+ *     summary: Elimina un seguro existente
+ *     tags: [Seguros]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         description: ID del seguro a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Registro eliminado
+ *       400:
+ *         description: Error en la eliminación
+ */
 
 ruta.get('/', controladorSeguro.inicio);
 

@@ -13,6 +13,9 @@ const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 require('dotenv').config();
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./configuraciones/swagger');
+
 const db = require('./configuraciones/db');
 
 
@@ -84,6 +87,7 @@ app.use('/api/renta', require('./rutas/rutasRenta'));
 app.use('/api/vehiculo', require('./rutas/rutasVehiculo'));
 app.use('/api/usuario', require('./rutas/rutasUsuario'));
 app.use('/api/empleado', require('./rutas/rutasEmpleado'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor iniciado en el puerto ' + process.env.PORT);
