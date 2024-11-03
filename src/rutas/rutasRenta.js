@@ -5,10 +5,240 @@ const controladorRenta = require('../controladores/controladorRenta');
 const modeloVehiculo = require('../modelos/vehiculo');
 const ruta = Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Rentas
+ *   description: Operaciones relacionas con las rentas
+ */
+
+/**
+ * @swagger
+ * /renta/listar:
+ *   get:
+ *     summary: Obtiene la lista de las rentas
+ *     tags: 
+ *         [Rentas]
+ *     responses:
+ *       200:
+ *         description: Lista de las rentas obtenidos con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   Rentaid:
+ *                     type: integer
+ *                     description: Identificador único de la renta
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   clienteId:
+ *                     type: interger
+ *                     description: Identificador unico del clienteid
+ *                   fechaInicio:
+ *                     type: date
+ *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                   fechaFin:
+ *                     type: date
+ *                     description: Indica la fecha final de la renta del vehiculo
+ *                   precioTotal:
+ *                     type: decimal
+ *                     description: Indica el precio taotal de la renta del vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado de la renta
+ *
+ * 
+*        400:
+ *         description: Error en la consulta 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *        500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ * 
+ */
+
+
 ruta.get('/', controladorRenta.inicio);
 
 ruta.get('/listar', controladorRenta.listar);
 
+/**
+ * @swagger
+ * /renta/buscarrentaid:
+ *   get:
+ *     summary: Busca un renta por su ID
+ *     tags: 
+ *        [Rentas]
+ *     parameters:
+ *         in: query
+ *         name: Rentaid
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Identificador único de renta a buscar
+ *     responses:
+ *       200:
+ *         description: Renta encontrado con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                   Rentaid:
+ *                     type: integer
+ *                     description: Identificador único de la renta
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   clienteId:
+ *                     type: interger
+ *                     description: Identificador unico del clienteid
+ *                   fechaInicio:
+ *                     type: date
+ *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                   fechaFin:
+ *                     type: date
+ *                     description: Indica la fecha final de la renta del vehiculo
+ *                   precioTotal:
+ *                     type: decimal
+ *                     description: Indica el precio taotal de la renta del vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado de la renta
+ *                
+ *       400:
+ *         description: Error en la consulta a la base de datos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
+
+/**
+ * @swagger
+ * /renta/guardar:
+ *   post:
+ *     summary: Guarda una nueva renta
+ *     tags: 
+ *        [Rentas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                   Rentaid:
+ *                     type: integer
+ *                     description: Identificador único de la renta
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   clienteId:
+ *                     type: interger
+ *                     description: Identificador unico del clienteid
+ *                   fechaInicio:
+ *                     type: date
+ *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                   fechaFin:
+ *                     type: date
+ *                     description: Indica la fecha final de la renta del vehiculo
+ *                   precioTotal:
+ *                     type: decimal
+ *                     description: Indica el precio taotal de la renta del vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado de la renta
+ *                
+ *     responses:
+ *       201:
+ *         description: Renta guardada con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Mensaje del estado de la acción
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                   Rentaid:
+ *                     type: integer
+ *                     description: Identificador único de la renta
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   clienteId:
+ *                     type: interger
+ *                     description: Identificador unico del clienteid
+ *                   fechaInicio:
+ *                     type: date
+ *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                   fechaFin:
+ *                     type: date
+ *                     description: Indica la fecha final de la renta del vehiculo
+ *                   precioTotal:
+ *                     type: decimal
+ *                     description: Indica el precio taotal de la renta del vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado de la renta
+ *                
+ *       400:
+ *         description: Error en la consulta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
 ruta.post('/guardar',
     body("cliente").isLength({ min: 1, max: 50 }).withMessage("El nombre del cliente debe tener entre 3 y 50 caracteres")
         .custom(async value => {
@@ -28,6 +258,104 @@ ruta.post('/guardar',
     controladorRenta.guardar
 );
 
+/**
+ * @swagger
+ * /renta/editar:
+ *   put:
+ *     summary: Modifica una renta existente
+ *     tags:
+ *       [Rentas]
+ *     parameters:
+ *       - in: query
+ *         name:  Rentaid
+ *         required: true
+ *         description: Identificador único de la renta a modificar
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                   Rentaid:
+ *                     type: integer
+ *                     description: Identificador único de la renta
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico de vehiculo
+ *                   clienteId:
+ *                     type: interger
+ *                     description: Identificador unico de clienteid
+ *                   fechaInicio:
+ *                     type: date
+ *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                   fechaFin:
+ *                     type: date
+ *                     description: Indica la fecha final de la renta del vehiculo
+ *                   precioTotal:
+ *                     type: decimal
+ *                     description: Indica el precio taotal de la renta del vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado de la renta
+ *     responses:
+ *       201:
+ *         description: Renta modificada con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Mensaje del estado de la acción
+ *                 data:
+ *                   type: object
+ *                   properties:
+*                   Rentaid:
+ *                     type: integer
+ *                     description: Identificador único de la renta
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   clienteId:
+ *                     type: interger
+ *                     description: Identificador unico del clienteid
+ *                   fechaInicio:
+ *                     type: date
+ *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                   fechaFin:
+ *                     type: date
+ *                     description: Indica la fecha final de la renta del vehiculo
+ *                   precioTotal:
+ *                     type: decimal
+ *                     description: Indica el precio taotal de la renta del vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado de la renta
+ *       400:
+ *         description: Error en la consulta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
 ruta.put('/editar',
     query("id").isInt().withMessage('El ID debe ser un valor entero')
         .custom(async value => {
@@ -42,6 +370,59 @@ ruta.put('/editar',
     body("fechafin").optional().isISO8601().withMessage("La fecha de fin debe ser válida"),
     controladorRenta.modificar
 );
+
+/**
+ * @swagger
+ * /renta/eliminar:
+ *   delete:
+ *     summary: Elimina una renta existente
+ *     tags:
+ *       [Rentas]
+ *     parameters:
+ *       - in: query
+ *         name:  Rentaid
+ *         required: true
+ *         description: Identificador único de la renta a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Registro eliminado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Registro eliminado"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     idPago:
+ *                       type: integer
+ *                       description: Identificador único de la renta eliminada
+ *       400:
+ *         description: Error en la consulta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
 
 ruta.delete('/eliminar',
     query("id").isInt().withMessage('El ID debe ser un valor entero')

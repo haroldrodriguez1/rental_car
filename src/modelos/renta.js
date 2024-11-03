@@ -4,7 +4,7 @@ const db = require('../configuraciones/db');
 const Renta = db.define(
   "renta", 
   {
-    id: {
+    Rentaid: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,

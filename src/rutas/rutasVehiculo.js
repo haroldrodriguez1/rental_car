@@ -4,9 +4,252 @@ const modeloVehiculo = require('../modelos/vehiculo');
 const controladorVehiculo = require('../controladores/controladorVehiculo');
 const ruta = Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Vehiculos
+ *   description: Operaciones relacionas con los vehiculos
+ */
+
+/**
+ * @swagger
+ * /vehiculo/listar:
+ *   get:
+ *     summary: Obtiene la lista de los vehiculos
+ *     tags: 
+ *         [Vehiculos]
+ *     responses:
+ *       200:
+ *         description: Lista de los vehiculos obtenidos con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   marca:
+ *                     type: string
+ *                     description: Indica la marca del vehiculo
+ *                   modelo:
+ *                     type: string
+ *                     description: Indica el modelo del vehiculo
+ *                   año:
+ *                     type: interger
+ *                     description: Indica el año del vehiculo
+ *                   precioPorDia:
+ *                     type: decimal
+ *                     description: Indica el precio por dia del vehiculo
+ *                   tipoVehiculo:
+ *                     type: string
+ *                     description: Indica el tipo de vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado del vehiculo
+ *                   placa:
+ *                     type: string
+ *                     description: Indica la placa del vehiculo
+ *
+ * 
+*        400:
+ *         description: Error en la consulta 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *        500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ * 
+ */
+
+
 ruta.get('/', controladorVehiculo.inicio);
 
 ruta.get('/listar', controladorVehiculo.listar);
+
+/**
+ * @swagger
+ * /vehiculo/buscarvehiculoid:
+ *   get:
+ *     summary: Busca un vehiculo por su ID
+ *     tags: 
+ *        [Vehiculos]
+ *     parameters:
+ *         in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Identificador único de vehiculo a buscar
+ *     responses:
+ *       200:
+ *         description: Vehiculo encontrado con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   marca:
+ *                     type: string
+ *                     description: Indica la marca del vehiculo
+ *                   modelo:
+ *                     type: string
+ *                     description: Indica el modelo del vehiculo
+ *                   año:
+ *                     type: interger
+ *                     description: Indica el año del vehiculo
+ *                   precioPorDia:
+ *                     type: decimal
+ *                     description: Indica el precio por dia del vehiculo
+ *                   tipoVehiculo:
+ *                     type: string
+ *                     description: Indica el tipo de vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado del vehiculo
+ *                   placa:
+ *                     type: string
+ *                     description: Indica la placa del vehiculo
+ *                
+ *       400:
+ *         description: Error en la consulta a la base de datos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
+
+/**
+ * @swagger
+ * /vehiculo/guardar:
+ *   post:
+ *     summary: Guarda un nuevo vehiculo
+ *     tags: 
+ *        [Vehiculos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   marca:
+ *                     type: string
+ *                     description: Indica la marca del vehiculo
+ *                   modelo:
+ *                     type: string
+ *                     description: Indica el modelo del vehiculo
+ *                   año:
+ *                     type: interger
+ *                     description: Indica el año del vehiculo
+ *                   precioPorDia:
+ *                     type: decimal
+ *                     description: Indica el precio por dia del vehiculo
+ *                   tipoVehiculo:
+ *                     type: string
+ *                     description: Indica el tipo de vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado del vehiculo
+ *                   placa:
+ *                     type: string
+ *                     description: Indica la placa del vehiculo
+ *                
+ *     responses:
+ *       201:
+ *         description: Vehiculo guardado con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Mensaje del estado de la acción
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   marca:
+ *                     type: string
+ *                     description: Indica la marca del vehiculo
+ *                   modelo:
+ *                     type: string
+ *                     description: Indica el modelo del vehiculo
+ *                   año:
+ *                     type: interger
+ *                     description: Indica el año del vehiculo
+ *                   precioPorDia:
+ *                     type: decimal
+ *                     description: Indica el precio por dia del vehiculo
+ *                   tipoVehiculo:
+ *                     type: string
+ *                     description: Indica el tipo de vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado del vehiculo
+ *                   placa:
+ *                     type: string
+ *                     description: Indica la placa del vehiculo
+ *                
+ *       400:
+ *         description: Error en la consulta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
 
 ruta.post('/guardar',
     body("marca").isLength({ min: 3, max: 50 }).withMessage("La marca debe tener entre 3 y 50 caracteres")
@@ -27,6 +270,111 @@ ruta.post('/guardar',
     controladorVehiculo.guardar
 );
 
+/**
+ * @swagger
+ * /vehiculo/editar:
+ *   put:
+ *     summary: Modifica un vehiculo existente
+ *     tags:
+ *       [Vehiculos]
+ *     parameters:
+ *       - in: query
+ *         name:  Vehiculoid
+ *         required: true
+ *         description: Identificador único del vehiculo a modificar
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                  vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   marca:
+ *                     type: string
+ *                     description: Indica la marca del vehiculo
+ *                   modelo:
+ *                     type: string
+ *                     description: Indica el modelo del vehiculo
+ *                   año:
+ *                     type: interger
+ *                     description: Indica el año del vehiculo
+ *                   precioPorDia:
+ *                     type: decimal
+ *                     description: Indica el precio por dia del vehiculo
+ *                   tipoVehiculo:
+ *                     type: string
+ *                     description: Indica el tipo de vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado del vehiculo
+ *                   placa:
+ *                     type: string
+ *                     description: Indica la placa del vehiculo
+ *     responses:
+ *       201:
+ *         description: Vehiculo modificado con éxito
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Mensaje del estado de la acción
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                   vehiculoid:
+ *                     type: interger
+ *                     description: Identificar unico del vehiculo
+ *                   marca:
+ *                     type: string
+ *                     description: Indica la marca del vehiculo
+ *                   modelo:
+ *                     type: string
+ *                     description: Indica el modelo del vehiculo
+ *                   año:
+ *                     type: interger
+ *                     description: Indica el año del vehiculo
+ *                   precioPorDia:
+ *                     type: decimal
+ *                     description: Indica el precio por dia del vehiculo
+ *                   tipoVehiculo:
+ *                     type: string
+ *                     description: Indica el tipo de vehiculo
+ *                   estado:
+ *                     type: enum
+ *                     description: Indica el estado del vehiculo
+ *                   placa:
+ *                     type: string
+ *                     description: Indica la placa del vehiculo
+ *       400:
+ *         description: Error en la consulta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
+
 ruta.put('/editar',
     query("id").isInt().withMessage('El ID debe ser un valor entero')
         .custom(async value => {
@@ -42,6 +390,58 @@ ruta.put('/editar',
     controladorVehiculo.modificar
 );
 
+/**
+ * @swagger
+ * /vehiculo/eliminar:
+ *   delete:
+ *     summary: Elimina un vehiculo existente
+ *     tags:
+ *       [Vehiculos]
+ *     parameters:
+ *       - in: query
+ *         name:  Vehiculoid
+ *         required: true
+ *         description: Identificador único del vehiculo a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Registro eliminado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Registro eliminado"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     idPago:
+ *                       type: integer
+ *                       description: Identificador único del vehiculo eliminado
+ *       400:
+ *         description: Error en la consulta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en la consulta"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: "Error en el servidor"
+ */
 ruta.delete('/eliminar',
     query("id").isInt().withMessage('El ID debe ser un valor entero')
         .custom(async value => {
