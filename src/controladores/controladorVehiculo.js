@@ -45,6 +45,35 @@ exports.listar = async (req, res) => {
     }
 }
 
+exports.buscarVehiculoid = async (req, res) => {
+    
+    try {
+        const { Vehiculoid } = req.query;
+        await modeloVehiculo.findAll({
+            where: {
+                Vehiculoid
+            }
+        })
+        .then((data)=>{
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(data);
+        })
+        .catch((er)=>{
+            console.log(er);
+            res.statusCode = 400;
+            res.setHeader("Content-Type", "application/json");
+            res.json({msg: "Error en la consulta"});
+        });
+    } catch (error) {
+        console.log(error);
+            res.statusCode = 500;
+            res.setHeader("Content-Type", "application/json");
+            res.json({msg: "Error en el servidor"});
+    }
+}
+
+
 exports.guardar = async (req, res) => {
     const errores = validationResult(req);
     var ers = [];

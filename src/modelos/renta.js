@@ -19,11 +19,11 @@ const Renta = db.define(
       },
     },
     clienteId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(20),
       allowNull: false,
       references: {
          model: 'clientes',
-        key: 'id', 
+        key: 'clienteId', 
       }
     },
 

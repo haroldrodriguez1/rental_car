@@ -11,16 +11,17 @@ const ruta = Router();
  *   description: Operaciones relacionas con los vehiculos
  */
 
+ruta.get('/', controladorVehiculo.inicio);
 /**
  * @swagger
  * /vehiculo/listar:
  *   get:
- *     summary: Obtiene la lista de los vehiculos
+ *     summary: Obtiene la lista de los vehículos
  *     tags: 
- *         [Vehiculos]
+ *       - Vehiculos
  *     responses:
  *       200:
- *         description: Lista de los vehiculos obtenidos con éxito
+ *         description: Lista de los vehículos obtenidos con éxito
  *         content: 
  *           application/json:
  *             schema:
@@ -29,32 +30,34 @@ const ruta = Router();
  *                 type: object
  *                 properties:
  *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
+ *                     type: integer
+ *                     description: Identificador único del vehículo
  *                   marca:
  *                     type: string
- *                     description: Indica la marca del vehiculo
+ *                     description: Indica la marca del vehículo
  *                   modelo:
  *                     type: string
- *                     description: Indica el modelo del vehiculo
+ *                     description: Indica el modelo del vehículo
  *                   año:
- *                     type: interger
- *                     description: Indica el año del vehiculo
+ *                     type: integer
+ *                     description: Indica el año del vehículo
  *                   precioPorDia:
- *                     type: decimal
- *                     description: Indica el precio por dia del vehiculo
+ *                     type: number
+ *                     format: float
+ *                     description: Indica el precio por día del vehículo
  *                   tipoVehiculo:
  *                     type: string
- *                     description: Indica el tipo de vehiculo
+ *                     description: Indica el tipo de vehículo
  *                   estado:
- *                     type: enum
- *                     description: Indica el estado del vehiculo
+ *                     type: string
+ *                     description: Indica el estado del vehículo
  *                   placa:
  *                     type: string
- *                     description: Indica la placa del vehiculo
- *
- * 
-*        400:
+ *                     description: Indica la placa del vehículo
+ *                   imagen:
+ *                     type: string
+ *                     description: Imagen del vehículo
+ *       400:
  *         description: Error en la consulta 
  *         content:
  *           application/json:
@@ -64,7 +67,7 @@ const ruta = Router();
  *                 msg:
  *                   type: string
  *                   description: "Error en la consulta"
- *        500:
+ *       500:
  *         description: Error en el servidor
  *         content:
  *           application/json:
@@ -74,11 +77,9 @@ const ruta = Router();
  *                 msg:
  *                   type: string
  *                   description: "Error en el servidor"
- * 
  */
 
 
-ruta.get('/', controladorVehiculo.inicio);
 
 ruta.get('/listar', controladorVehiculo.listar);
 
@@ -155,9 +156,9 @@ ruta.get('/listar', controladorVehiculo.listar);
  * @swagger
  * /vehiculo/guardar:
  *   post:
- *     summary: Guarda un nuevo vehiculo
+ *     summary: Guarda un nuevo vehículo
  *     tags: 
- *        [Vehiculos]
+ *       - Vehiculos
  *     requestBody:
  *       required: true
  *       content:
@@ -165,34 +166,34 @@ ruta.get('/listar', controladorVehiculo.listar);
  *           schema:
  *             type: object
  *             properties:
- *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
- *                   marca:
- *                     type: string
- *                     description: Indica la marca del vehiculo
- *                   modelo:
- *                     type: string
- *                     description: Indica el modelo del vehiculo
- *                   año:
- *                     type: interger
- *                     description: Indica el año del vehiculo
- *                   precioPorDia:
- *                     type: decimal
- *                     description: Indica el precio por dia del vehiculo
- *                   tipoVehiculo:
- *                     type: string
- *                     description: Indica el tipo de vehiculo
- *                   estado:
- *                     type: enum
- *                     description: Indica el estado del vehiculo
- *                   placa:
- *                     type: string
- *                     description: Indica la placa del vehiculo
- *                
+ *               marca:
+ *                 type: string
+ *                 description: Indica la marca del vehículo
+ *               modelo:
+ *                 type: string
+ *                 description: Indica el modelo del vehículo
+ *               año:
+ *                 type: integer
+ *                 description: Indica el año del vehículo
+ *               precioPorDia:
+ *                 type: number
+ *                 format: float
+ *                 description: Indica el precio por día del vehículo
+ *               tipoVehiculo:
+ *                 type: string
+ *                 description: Indica el tipo de vehículo
+ *               estado:
+ *                 type: string
+ *                 description: Indica el estado del vehículo
+ *               placa:
+ *                 type: string
+ *                 description: Indica la placa del vehículo
+ *               imagen:
+ *                 type: string
+ *                 description: Imagen del vehículo
  *     responses:
  *       201:
- *         description: Vehiculo guardado con éxito
+ *         description: Vehículo guardado con éxito
  *         content: 
  *           application/json:
  *             schema:
@@ -204,31 +205,34 @@ ruta.get('/listar', controladorVehiculo.listar);
  *                 data:
  *                   type: object
  *                   properties:
- *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
- *                   marca:
- *                     type: string
- *                     description: Indica la marca del vehiculo
- *                   modelo:
- *                     type: string
- *                     description: Indica el modelo del vehiculo
- *                   año:
- *                     type: interger
- *                     description: Indica el año del vehiculo
- *                   precioPorDia:
- *                     type: decimal
- *                     description: Indica el precio por dia del vehiculo
- *                   tipoVehiculo:
- *                     type: string
- *                     description: Indica el tipo de vehiculo
- *                   estado:
- *                     type: enum
- *                     description: Indica el estado del vehiculo
- *                   placa:
- *                     type: string
- *                     description: Indica la placa del vehiculo
- *                
+ *                     vehiculoid:
+ *                       type: integer
+ *                       description: Identificador único del vehículo
+ *                     marca:
+ *                       type: string
+ *                       description: Indica la marca del vehículo
+ *                     modelo:
+ *                       type: string
+ *                       description: Indica el modelo del vehículo
+ *                     año:
+ *                       type: integer
+ *                       description: Indica el año del vehículo
+ *                     precioPorDia:
+ *                       type: number
+ *                       format: float
+ *                       description: Indica el precio por día del vehículo
+ *                     tipoVehiculo:
+ *                       type: string
+ *                       description: Indica el tipo de vehículo
+ *                     estado:
+ *                       type: string
+ *                       description: Indica el estado del vehículo
+ *                     placa:
+ *                       type: string
+ *                       description: Indica la placa del vehículo
+ *                     imagen:
+ *                       type: string
+ *                       description: Imagen del vehículo
  *       400:
  *         description: Error en la consulta
  *         content:
@@ -274,14 +278,14 @@ ruta.post('/guardar',
  * @swagger
  * /vehiculo/editar:
  *   put:
- *     summary: Modifica un vehiculo existente
+ *     summary: Modifica un vehículo existente
  *     tags:
- *       [Vehiculos]
+ *       - Vehiculos
  *     parameters:
  *       - in: query
- *         name:  Vehiculoid
+ *         name: vehiculoid
  *         required: true
- *         description: Identificador único del vehiculo a modificar
+ *         description: Identificador único del vehículo a modificar
  *         schema:
  *           type: integer
  *     requestBody:
@@ -291,33 +295,37 @@ ruta.post('/guardar',
  *           schema:
  *             type: object
  *             properties:
- *                  vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
- *                   marca:
- *                     type: string
- *                     description: Indica la marca del vehiculo
- *                   modelo:
- *                     type: string
- *                     description: Indica el modelo del vehiculo
- *                   año:
- *                     type: interger
- *                     description: Indica el año del vehiculo
- *                   precioPorDia:
- *                     type: decimal
- *                     description: Indica el precio por dia del vehiculo
- *                   tipoVehiculo:
- *                     type: string
- *                     description: Indica el tipo de vehiculo
- *                   estado:
- *                     type: enum
- *                     description: Indica el estado del vehiculo
- *                   placa:
- *                     type: string
- *                     description: Indica la placa del vehiculo
+ *               vehiculoid:
+ *                 type: integer
+ *                 description: Identificador único del vehículo
+ *               marca:
+ *                 type: string
+ *                 description: Indica la marca del vehículo
+ *               modelo:
+ *                 type: string
+ *                 description: Indica el modelo del vehículo
+ *               año:
+ *                 type: integer
+ *                 description: Indica el año del vehículo
+ *               precioPorDia:
+ *                 type: number
+ *                 format: float
+ *                 description: Indica el precio por día del vehículo
+ *               tipoVehiculo:
+ *                 type: string
+ *                 description: Indica el tipo de vehículo
+ *               estado:
+ *                 type: string
+ *                 description: Indica el estado del vehículo
+ *               placa:
+ *                 type: string
+ *                 description: Indica la placa del vehículo
+ *               imagen:
+ *                 type: string
+ *                 description: Imagen del vehículo
  *     responses:
- *       201:
- *         description: Vehiculo modificado con éxito
+ *       200:
+ *         description: Vehículo modificado con éxito
  *         content: 
  *           application/json:
  *             schema:
@@ -329,30 +337,34 @@ ruta.post('/guardar',
  *                 data:
  *                   type: object
  *                   properties:
- *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
- *                   marca:
- *                     type: string
- *                     description: Indica la marca del vehiculo
- *                   modelo:
- *                     type: string
- *                     description: Indica el modelo del vehiculo
- *                   año:
- *                     type: interger
- *                     description: Indica el año del vehiculo
- *                   precioPorDia:
- *                     type: decimal
- *                     description: Indica el precio por dia del vehiculo
- *                   tipoVehiculo:
- *                     type: string
- *                     description: Indica el tipo de vehiculo
- *                   estado:
- *                     type: enum
- *                     description: Indica el estado del vehiculo
- *                   placa:
- *                     type: string
- *                     description: Indica la placa del vehiculo
+ *                     vehiculoid:
+ *                       type: integer
+ *                       description: Identificador único del vehículo
+ *                     marca:
+ *                       type: string
+ *                       description: Indica la marca del vehículo
+ *                     modelo:
+ *                       type: string
+ *                       description: Indica el modelo del vehículo
+ *                     año:
+ *                       type: integer
+ *                       description: Indica el año del vehículo
+ *                     precioPorDia:
+ *                       type: number
+ *                       format: float
+ *                       description: Indica el precio por día del vehículo
+ *                     tipoVehiculo:
+ *                       type: string
+ *                       description: Indica el tipo de vehículo
+ *                     estado:
+ *                       type: string
+ *                       description: Indica el estado del vehículo
+ *                     placa:
+ *                       type: string
+ *                       description: Indica la placa del vehículo
+ *                     imagen:
+ *                       type: string
+ *                       description: Imagen del vehículo
  *       400:
  *         description: Error en la consulta
  *         content:
@@ -374,7 +386,6 @@ ruta.post('/guardar',
  *                   type: string
  *                   description: "Error en el servidor"
  */
-
 ruta.put('/editar',
     query("id").isInt().withMessage('El ID debe ser un valor entero')
         .custom(async value => {
@@ -394,14 +405,14 @@ ruta.put('/editar',
  * @swagger
  * /vehiculo/eliminar:
  *   delete:
- *     summary: Elimina un vehiculo existente
+ *     summary: Elimina un vehículo existente
  *     tags:
- *       [Vehiculos]
+ *       - Vehiculos
  *     parameters:
  *       - in: query
- *         name:  Vehiculoid
+ *         name: vehiculoid
  *         required: true
- *         description: Identificador único del vehiculo a eliminar
+ *         description: Identificador único del vehículo a eliminar
  *         schema:
  *           type: integer
  *     responses:
@@ -418,9 +429,9 @@ ruta.put('/editar',
  *                 data:
  *                   type: object
  *                   properties:
- *                     idPago:
+ *                     vehiculoid:
  *                       type: integer
- *                       description: Identificador único del vehiculo eliminado
+ *                       description: Identificador único del vehículo eliminado
  *       400:
  *         description: Error en la consulta
  *         content:

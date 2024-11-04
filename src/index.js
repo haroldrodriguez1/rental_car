@@ -7,10 +7,15 @@ const modeloVehiculo = require('./modelos/vehiculo');
 const modeloPago = require('./modelos/pago')
 const modeloMantenimiento = require('./modelos/mantenimiento')
 const modeloServicio = require('./modelos/servicioAdicional')
-
-
+const modeloCliente = require('./modelos/cliente')
+const modeloUsuario = require('./modelos/usuario')
+const modeloSucursal = require('./modelos/sucursal')
+const modeloEmpresa = require('./modelos/empresa')
+const modeloClienteTelefono = require('./modelos/clienteTelefono')
+const modeloClienteDireccion = require('./modelos/clienteDireccion')
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
+
 require('dotenv').config();
 
 const swaggerUi = require('swagger-ui-express');
@@ -23,11 +28,6 @@ db.authenticate()
     .then(async (data) => {
         console.log("Conexion correcta con la base de datos");
 
-        modeloPago.hasMany(modeloRenta);
-        modeloRenta.belongsTo(modeloPago);
-
-        modeloVehiculo.hasMany(modeloMantenimiento);
-        modeloMantenimiento.belongsTo(modeloVehiculo);
 
         modeloSeguro.hasMany(modeloRenta);
         modeloRenta.belongsTo(modeloSeguro);
@@ -35,20 +35,31 @@ db.authenticate()
         modeloServicio.hasMany(modeloRenta);
         modeloRenta.belongsTo(modeloServicio);
         
+        modeloUsuario.hasMany(modeloCliente)
+        modeloCliente.belongsTo(modeloUsuario)
 
 
-        await modeloVehiculo.sync().then((data) => {
-            console.log("Modelo vehiculo creado correctamente");
-        });
-        await modeloMantenimiento.sync().then((data) => {
-            console.log("modelo mantenimiento creado correctamente");
-        });
 
-        await modeloPago.sync().then((data) => {
-            console.log("modelo pago creado correctamente");
-        });
         await modeloSeguro.sync().then((data) => {
             console.log("Modelo seguro creado correctamente");
+        });
+        await modeloUsuario.sync().then((data) => {
+            console.log("modelo usuario creado correctamente");
+        });
+        await modeloCliente.sync().then((data) => {
+            console.log("Modelo cliente creado correctamente");
+        });
+        await modeloClienteTelefono.sync().then((data) => {
+            console.log("Modelo cliente telefono creado correctamente");
+        });
+        
+        
+        await modeloClienteDireccion.sync().then((data) => {
+            console.log("Modelo cliente direccion creado correctamente");
+        });
+        await modeloVehiculo.sync().then((data) => {
+            console.log("Modelo vehiculo creado correctamente");
+
         });
         await modeloServicio.sync().then((data) => {
             console.log("Modelo seguro creado correctamente");
@@ -56,10 +67,20 @@ db.authenticate()
         await modeloRenta.sync().then((data) => {
             console.log("Modelo renta creado correctamente");
         });
-
-        await modeloPago.sync().then((data)=>{
-        console.log("modelo pago creado correctamente")
-    })
+       
+        await modeloMantenimiento.sync().then((data) => {
+            console.log("modelo mantenimiento creado correctamente");
+        });
+        await modeloPago.sync().then((data) => {
+            console.log("modelo pago creado correctamente");
+        });
+        await modeloEmpresa.sync().then((data) => {
+            console.log("Modelo empresa creado correctamente");
+        });
+    
+        await modeloSucursal.sync().then((data) => {
+            console.log("Modelo sucursal creado correctamente");
+        });
     
 })
 .catch((er)=>{
@@ -85,8 +106,18 @@ app.use('/api/seguro', require('./rutas/rutasSeguro'));
 app.use('/api/servicio', require('./rutas/rutaServicioAdicional'));
 app.use('/api/renta', require('./rutas/rutasRenta'));
 app.use('/api/vehiculo', require('./rutas/rutasVehiculo'));
-app.use('/api/usuario', require('./rutas/rutasUsuario'));
+app.use('/api/usuarios', require('./rutas/rutasUsuario'));
 app.use('/api/empleado', require('./rutas/rutasEmpleado'));
+app.use('/api/mantenimiento', require('./rutas/rutaMantenimiento'));
+app.use('/api/cliente', require('./rutas/rutaCliente'));
+app.use('/api/clientetelefono', require('./rutas/rutaClienteTelefono'));
+app.use('/api/clientedireccion', require('./rutas/rutaClienteDireccion'));
+app.use('/api/sucursal', require('./rutas/rutaSucursal'));
+app.use('/api/empresa', require('./rutas/rutaEmpresas'));
+
+
+app.use('/api/pago', require('./rutas/rutaPago'));
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(process.env.PORT, () => {

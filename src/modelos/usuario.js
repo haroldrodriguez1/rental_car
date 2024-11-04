@@ -1,49 +1,66 @@
-const { DataTypes } = require('sequelize');
-const db = require('../configuraciones/db');
+const sequelize = require('sequelize')
+const db = require('../configuraciones/db')
+
 
 const Usuario = db.define(
-  "usuario",
-  {
-    id_usuario: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
+    "usuario",
+    {
+        identificacion:{
+            type: sequelize.STRING(4),
+            allowNull: false
+        },
+        nombreUsuario: {
+            type: sequelize.STRING(120),
+            allowNull: false,
+            
+        },
+        contrasena:{
+            type: sequelize.STRING(250),
+            allowNull: false
+        },
+        correo:{
+            type: sequelize.STRING(250),
+            allowNull: false,
+            unique:{
+            args: true,
+            msg: "Ya existe este correo"
+            },
+            validate:{
+                isEmail: true
+
+            }
+
+        },
+        tipoUsuario:{
+            type: sequelize.ENUM('Cliente', 'Empleado'),
+            allowNull: false,
+
+        },
+        pin:{
+            type: sequelize.STRING(6),
+            allowNull: true,
+           defaultValue: '000000'
+
+        },
+        intentos:{
+            type: sequelize.INTEGER,
+            allowNull: true,
+           defaultValue: 0
+
+        },
+        estado: {
+            type: sequelize.ENUM('AC', 'iN', 'BL'),
+            allowNull: true,
+            defaultValue:'AC'
+
+        }
+
     },
-   
-    tipo_usuario: {
-      type: DataTypes.ENUM('Cliente', 'Empleado'),
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      validate: {
-        isEmail: true,
-        notEmpty: true,
-      },
-    },
-    contraseña: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    rol: {
-      type: DataTypes.ENUM('Admin', 'Gerente', 'Cajero'),
-      allowNull: false,
-    },
-    fecha_creación: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-  },
-  {
-    tableName: "usuarios", 
-    timestamps: true,
-  }
-);
+
+    {
+        tableName: "usuarios",
+        timestamps: true,
+    }
+)
 
 module.exports = Usuario;

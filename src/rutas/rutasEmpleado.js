@@ -12,41 +12,42 @@ const ruta = Router();
  * 
  */
 
+ruta.get('/', controladorEmpleado.inicio);
+
 /**
  * @swagger
  * /empleado/listar:
  *   get:
  *     summary: Obtiene la lista de los empleados
- *     tags: 
- *         [Empleados]
+ *     tags:
+ *       - Empleados
  *     responses:
  *       200:
- *         description: Lista de los empleados obtenidos 
- *         content: 
+ *         description: Lista de los empleados obtenidos
+ *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 type: object
  *                 properties:
- *                   id_empleado: 
-                    type: integer
+ *                   id_empleado:
+ *                     type: integer
  *                     description: Identificador único del empleado
- *                    nombre_empleado: 
-                     type: string
+ *                   nombre_empleado:
+ *                     type: string
  *                     description: Indica el nombre del empleado
- *                     telefono: 
-                    type: string
- *                     description: Indica el telefono del empleado
- *                   correo: 
-                    type: string
+ *                   telefono:
+ *                     type: string
+ *                     description: Indica el teléfono del empleado
+ *                   correo:
+ *                     type: string
  *                     description: Indica el correo del empleado
- *                  cargo: 
-                    type: string
+ *                   cargo:
+ *                     type: string
  *                     description: Indicador del cargo del empleado
-                       
-*        400:
- *         description: Error en la consulta 
+ *       400:
+ *         description: Error en la consulta
  *         content:
  *           application/json:
  *             schema:
@@ -54,8 +55,8 @@ const ruta = Router();
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: "Error en la consulta"
- *        500:
+ *                   description: Error en la consulta
+ *       500:
  *         description: Error en el servidor
  *         content:
  *           application/json:
@@ -64,73 +65,51 @@ const ruta = Router();
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: "Error en el servidor"
- * 
+ *                   description: Error en el servidor
  */
-
-
-
-
-ruta.get('/', controladorEmpleado.inicio);
-
 
 ruta.get('/listar',controladorEmpleado.listar);
 
 
 /**
  * @swagger
- * /empleado/guardar:
- *   post:
- *     summary: Guarda un nuevo empleado
+ * /empleado/buscaridempleado:
+ *   get:
+ *     summary: Busca un empleado por su ID
  *     tags: 
- *        [Empleados]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *                id_empleado: 
-                    type: integer
- *                     description: Identificador único del empleado
- *                    nombre_empleado: 
-                     type: string
- *                     description: Indica el nombre del empleado
- *                     telefono: 
-                    type: string
- *                     description: Indica el telefono del empleado
- *                   correo: 
-                    type: string
- *                     description: Indica el correo del empleado
- *                  cargo: 
-                    type: string
- *                     description: Indicador del cargo del empleado
+ *        [Empleado]
+ *     parameters:
+ *         in: query
+ *         name: IdEmpleado
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Identificador único del empleado a buscar
  *     responses:
- *       201:
- *         description: Empleado guardado con éxito
+ *       200:
+ *         description: Empleado encontrado con éxito
  *         content: 
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                     id_empleado: 
-                    type: integer
+ *                   id_empleado:
+ *                     type: integer
  *                     description: Identificador único del empleado
- *                    nombre_empleado: 
-                     type: string
+ *                   nombre_empleado:
+ *                     type: string
  *                     description: Indica el nombre del empleado
- *                     telefono: 
-                    type: string
- *                     description: Indica el telefono del empleado
- *                   correo: 
-                    type: string
+ *                   telefono:
+ *                     type: string
+ *                     description: Indica el teléfono del empleado
+ *                   correo:
+ *                     type: string
  *                     description: Indica el correo del empleado
- *                  cargo: 
-                    type: string
+ *                   cargo:
+ *                     type: string
  *                     description: Indicador del cargo del empleado
  *       400:
- *         description: Error en la consulta
+ *         description: Error en la consulta a la base de datos
  *         content:
  *           application/json:
  *             schema:
@@ -149,6 +128,103 @@ ruta.get('/listar',controladorEmpleado.listar);
  *                 msg:
  *                   type: string
  *                   description: "Error en el servidor"
+ */
+
+
+ruta.get('/buscaridempleado',
+    query('IdEmpleado').notEmpty().withMessage('El campo IdEmpleado no puede estar vacío')
+        .isInt().withMessage('El IdEmpleado debe ser un número entero'),
+        async(req, res ) =>{
+            try {
+                const errores = validationResult(req);
+                if(!errores.isEmpty()){
+                    return  res.status(400).json({errores});
+                }
+                const { IdEmpleado } = req.query
+                const empleado = await modeloEmpleado.findByPk(IdEmpleado);
+
+                if(!empleado){
+                     return res.status(404).json({campo: "IdEmpleado", msj: "Este empleado no existe"});
+                }
+                return controladorEmpleado.buscarIdEmpleado(req, res);
+            }   catch (error) {
+                    return res.status(500).json({msg: "Error en el servidor "});
+            }
+        },
+        controladorEmpleado.buscarIdEmpleado
+);
+/**
+ * @swagger
+ * /empleado/guardar:
+ *   post:
+ *     summary: Guarda un nuevo empleado
+ *     tags:
+ *       - Empleados
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_empleado:
+ *                 type: integer
+ *                 description: Identificador único del empleado
+ *               nombre_empleado:
+ *                 type: string
+ *                 description: Indica el nombre del empleado
+ *               telefono:
+ *                 type: string
+ *                 description: Indica el teléfono del empleado
+ *               correo:
+ *                 type: string
+ *                 description: Indica el correo del empleado
+ *               cargo:
+ *                 type: string
+ *                 description: Indicador del cargo del empleado
+ *     responses:
+ *       201:
+ *         description: Empleado guardado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_empleado:
+ *                   type: integer
+ *                   description: Identificador único del empleado
+ *                 nombre_empleado:
+ *                   type: string
+ *                   description: Indica el nombre del empleado
+ *                 telefono:
+ *                   type: string
+ *                   description: Indica el teléfono del empleado
+ *                 correo:
+ *                   type: string
+ *                   description: Indica el correo del empleado
+ *                 cargo:
+ *                   type: string
+ *                   description: Indicador del cargo del empleado
+ *       400:
+ *         description: Error en la consulta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error en la consulta
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: Error en el servidor
  */
 
 
@@ -172,16 +248,16 @@ ruta.post('/guardar',
     controladorEmpleado.guardar);
 
 
-    /**
+/**
  * @swagger
  * /empleado/editar:
  *   put:
  *     summary: Modifica un empleado existente
  *     tags:
- *       [Empleados]
+ *       - Empleados
  *     parameters:
  *       - in: query
- *         name:  IdEmpleado
+ *         name: id
  *         required: true
  *         description: Identificador único del empleado a modificar
  *         schema:
@@ -193,25 +269,25 @@ ruta.post('/guardar',
  *           schema:
  *             type: object
  *             properties:
- *                  id_empleado: 
-                    type: integer
- *                     description: Identificador único del empleado
- *                    nombre_empleado: 
-                     type: string
- *                     description: Indica el nombre del empleado
- *                     telefono: 
-                    type: string
- *                     description: Indica el telefono del empleado
- *                   correo: 
-                    type: string
- *                     description: Indica el correo del empleado
- *                  cargo: 
-                    type: string
- *                     description: Indicador del cargo del empleado
+ *               id_empleado:
+ *                 type: integer
+ *                 description: Identificador único del empleado
+ *               nombre_empleado:
+ *                 type: string
+ *                 description: Indica el nombre del empleado
+ *               telefono:
+ *                 type: string
+ *                 description: Indica el teléfono del empleado
+ *               correo:
+ *                 type: string
+ *                 description: Indica el correo del empleado
+ *               cargo:
+ *                 type: string
+ *                 description: Indicador del cargo del empleado
  *     responses:
  *       201:
  *         description: Empleado modificado con éxito
- *         content: 
+ *         content:
  *           application/json:
  *             schema:
  *               type: object
@@ -222,21 +298,21 @@ ruta.post('/guardar',
  *                 data:
  *                   type: object
  *                   properties:
- *                      id_empleado: 
-                    type: integer
- *                     description: Identificador único del empleado
- *                    nombre_empleado: 
-                     type: string
- *                     description: Indica el nombre del empleado
- *                     telefono: 
-                    type: string
- *                     description: Indica el telefono del empleado
- *                   correo: 
-                    type: string
- *                     description: Indica el correo del empleado
- *                  cargo: 
-                    type: string
- *                     description: Indicador del cargo del empleado
+ *                     id_empleado:
+ *                       type: integer
+ *                       description: Identificador único del empleado
+ *                     nombre_empleado:
+ *                       type: string
+ *                       description: Indica el nombre del empleado
+ *                     telefono:
+ *                       type: string
+ *                       description: Indica el teléfono del empleado
+ *                     correo:
+ *                       type: string
+ *                       description: Indica el correo del empleado
+ *                     cargo:
+ *                       type: string
+ *                       description: Indicador del cargo del empleado
  *       400:
  *         description: Error en la consulta
  *         content:
@@ -246,7 +322,7 @@ ruta.post('/guardar',
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: "Error en la consulta"
+ *                   description: Error en la consulta
  *       500:
  *         description: Error en el servidor
  *         content:
@@ -256,8 +332,9 @@ ruta.post('/guardar',
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: "Error en el servidor"
+ *                   description: Error en el servidor
  */
+
 
 
 
@@ -300,12 +377,12 @@ ruta.put('/editar',
  * @swagger
  * /empleado/eliminar:
  *   delete:
- *     summary: Elimina un empleadoo existente
+ *     summary: Elimina un empleado existente
  *     tags:
- *       [Empleados]
+ *       - Empleados
  *     parameters:
  *       - in: query
- *         name:  IdEmpleado
+ *         name: id
  *         required: true
  *         description: Identificador único del empleado a eliminar
  *         schema:
@@ -320,7 +397,7 @@ ruta.put('/editar',
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: "Empleado eliminado"
+ *                   description: Empleado eliminado
  *                 data:
  *                   type: object
  *                   properties:
@@ -336,7 +413,7 @@ ruta.put('/editar',
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: "Error en la consulta"
+ *                   description: Error en la consulta
  *       500:
  *         description: Error en el servidor
  *         content:
@@ -346,9 +423,8 @@ ruta.put('/editar',
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: "Error en el servidor"
+ *                   description: Error en el servidor
  */
-
 ruta.delete('/eliminar', 
     query("id").isInt().withMessage('Solo de permiten valores enteros en el id')
     .custom(async value =>{

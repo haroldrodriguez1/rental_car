@@ -1,6 +1,6 @@
-const modeloMantenimiento= require('../modelos/mantenimiento')
+const modeloMantenimiento = require('../modelos/mantenimiento')
 const { validationResult } = require('express-validator')
-
+const modeloVehiculo = require('../modelos/vehiculo')
 
 exports.listar = async(req,res) =>{
 
@@ -26,13 +26,13 @@ exports.listar = async(req,res) =>{
             res.json({ msg: "Error en el servidor"})
     }
 }
-exports.buscarIdmantenimiento = async (req, res) => {
+exports.buscarIdvehiculo = async (req, res) => {
     
     try {
-        const { IdMantenimiento } = req.query;
-        await modeloMantenimiento.findAll({
+        const {  vehiculoid } = req.query;
+        await modeloVehiculo.findAll({
             where: {
-                IdMantenimiento 
+                vehiculoid
             }
         })
         .then((data)=>{
@@ -53,6 +53,7 @@ exports.buscarIdmantenimiento = async (req, res) => {
             res.json({msg: "Error en el servidor"});
     }
 }
+
 
 exports.guardar = async(req,res)=>{
     console.log(req.body)
@@ -117,7 +118,7 @@ exports.modificar = async(req,res)=>{
             const { id } = req.query
             await modeloMantenimiento.update(
                 {...req.body},
-                { where:{id: id} })
+                { where:{IdMantenimiento: id} })
             .then((data)=>{
                 res.statusCode = 200
                 res.setHeader("Content-Type", "application/json")

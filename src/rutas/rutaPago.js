@@ -2,6 +2,7 @@
 const { Router } = require('express')
 const controladorPago = require ('../controladores/controladorPago')
 const modeloPago = require("../modelos/pago")
+const { validationResult } = require('express-validator');
 const { body, query } = require('express-validator')
 const rutas = Router();
 
@@ -13,7 +14,6 @@ const rutas = Router();
  *     description: Operaciones relacionadas con los pagos
  * 
  */
-
 /**
  * @swagger
  * /pago/listar:
@@ -46,7 +46,7 @@ const rutas = Router();
  *                   rentaId:
  *                     type: integer
  *                     description: Indicador unico de la renta
-*        400:
+ *       400:
  *         description: Error en la consulta 
  *         content:
  *           application/json:
@@ -56,7 +56,7 @@ const rutas = Router();
  *                 msg:
  *                   type: string
  *                   description: "Error en la consulta"
- *        500:
+ *       500:
  *         description: Error en el servidor
  *         content:
  *           application/json:
@@ -66,8 +66,8 @@ const rutas = Router();
  *                 msg:
  *                   type: string
  *                   description: "Error en el servidor"
- * 
  */
+
 
 rutas.get('/listar', controladorPago.listar)
 
@@ -106,8 +106,8 @@ rutas.get('/listar', controladorPago.listar)
  *                   type: date
  *                   description: Fecha en la que se realizó el pago
  *                 rentaId:
- *                     type: integer
- *                     description: Indicador unico de la renta
+ *                   type: integer
+ *                   description: Indicador unico de la renta
  *       400:
  *         description: Error en la consulta a la base de datos
  *         content:
@@ -241,7 +241,7 @@ rutas.post('/guardar',
         }
         else{
             const pago = await modeloPago.findOne({
-                where: {codigo: value}
+                where: {IdPago: value}
             });
             if(pago){
                 throw new Error('El IdPago del pago ya existe');
@@ -357,7 +357,7 @@ rutas.put('/editar',
         }
         else{
             const pago = await modeloPago.findOne({
-                where: {codigo: value}
+                where: {IdPago: value}
             });
             if(!pago){
                 throw new Error('El IdPago del pago no existe');
@@ -372,10 +372,9 @@ rutas.put('/editar',
         }
     }), 
     body("metodo_pago").optional().isIn(['Tarjeta', 'Efectivo', 'Transferencia', 'Cheque']).withMessage("Solo permite valores como 'Tarjeta', 'Efectivo', 'Transferencia', 'Cheque'"),
-    body("fecha_pago").optional().isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
+    body("fecha_pago").optional(),
     body("rentaId").optional().isInt().withMessage("El id de la renta debe ser un numero entero"),
         controladorPago.modificar)
-
 
 
 
@@ -388,7 +387,7 @@ rutas.put('/editar',
  *       [Pagos]
  *     parameters:
  *       - in: query
- *         name:  IdPago
+ *         name: IdPago
  *         required: true
  *         description: Identificador único del pago a eliminar
  *         schema:
@@ -432,7 +431,6 @@ rutas.put('/editar',
  *                   description: "Error en el servidor"
  */
 
-
         rutas.delete('/eliminar', 
             query("IdPago").isInt().withMessage("El id del pago debe ser un numero entero")
             .custom(async value =>{
@@ -441,13 +439,13 @@ rutas.put('/editar',
                 }
                 else{
                     const pago = await modeloPago.findOne({
-                        where: {id: value}
+                        where: {IdPago: value}
                     });
                     if(!pago){
                         throw new Error('El id del pago no existe');
                     }
                 }
             }),
-            controladorCargo.eliminar);
+            controladorPago.eliminar);
 
         module.exports = rutas;

@@ -22,7 +22,16 @@ const Pago = db.define(
         type: sequelize.DATE,
         allowNull: false
 
-      }
+      },
+      rentaId: {  
+        type: sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'rentas',  
+            key: 'Rentaid'  
+        }
+
+    },
 
     },
 

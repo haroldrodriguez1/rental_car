@@ -11,6 +11,7 @@ const ruta = Router();
  *   name: Rentas
  *   description: Operaciones relacionas con las rentas
  */
+ruta.get('/', controladorRenta.inicio);
 
 /**
  * @swagger
@@ -33,11 +34,11 @@ const ruta = Router();
  *                     type: integer
  *                     description: Identificador único de la renta
  *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
+ *                     type: integer
+ *                     description: Identificador único del vehiculo
  *                   clienteId:
- *                     type: interger
- *                     description: Identificador unico del clienteid
+ *                     type: integer
+ *                     description: Identificador único del cliente
  *                   fechaInicio:
  *                     type: date
  *                     description: Indica la fecha inicial de la renta del vehiculo
@@ -46,13 +47,11 @@ const ruta = Router();
  *                     description: Indica la fecha final de la renta del vehiculo
  *                   precioTotal:
  *                     type: decimal
- *                     description: Indica el precio taotal de la renta del vehiculo
+ *                     description: Indica el precio total de la renta del vehiculo
  *                   estado:
  *                     type: enum
  *                     description: Indica el estado de la renta
- *
- * 
-*        400:
+ *       400:
  *         description: Error en la consulta 
  *         content:
  *           application/json:
@@ -62,7 +61,7 @@ const ruta = Router();
  *                 msg:
  *                   type: string
  *                   description: "Error en la consulta"
- *        500:
+ *       500:
  *         description: Error en el servidor
  *         content:
  *           application/json:
@@ -72,11 +71,8 @@ const ruta = Router();
  *                 msg:
  *                   type: string
  *                   description: "Error en el servidor"
- * 
  */
 
-
-ruta.get('/', controladorRenta.inicio);
 
 ruta.get('/listar', controladorRenta.listar);
 
@@ -160,26 +156,26 @@ ruta.get('/listar', controladorRenta.listar);
  *           schema:
  *             type: object
  *             properties:
- *                   Rentaid:
- *                     type: integer
- *                     description: Identificador único de la renta
  *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
+ *                     type: integer
+ *                     description: Identificador único del vehículo
  *                   clienteId:
- *                     type: interger
- *                     description: Identificador unico del clienteid
+ *                     type: integer
+ *                     description: Identificador único del cliente
  *                   fechaInicio:
- *                     type: date
- *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                     type: string
+ *                     format: date
+ *                     description: Indica la fecha inicial de la renta del vehículo
  *                   fechaFin:
- *                     type: date
- *                     description: Indica la fecha final de la renta del vehiculo
+ *                     type: string
+ *                     format: date
+ *                     description: Indica la fecha final de la renta del vehículo
  *                   precioTotal:
- *                     type: decimal
- *                     description: Indica el precio taotal de la renta del vehiculo
+ *                     type: number
+ *                     format: float
+ *                     description: Indica el precio total de la renta del vehículo
  *                   estado:
- *                     type: enum
+ *                     type: string
  *                     description: Indica el estado de la renta
  *                
  *     responses:
@@ -196,27 +192,30 @@ ruta.get('/listar', controladorRenta.listar);
  *                 data:
  *                   type: object
  *                   properties:
- *                   Rentaid:
- *                     type: integer
- *                     description: Identificador único de la renta
- *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
- *                   clienteId:
- *                     type: interger
- *                     description: Identificador unico del clienteid
- *                   fechaInicio:
- *                     type: date
- *                     description: Indica la fecha inicial de la renta del vehiculo
- *                   fechaFin:
- *                     type: date
- *                     description: Indica la fecha final de la renta del vehiculo
- *                   precioTotal:
- *                     type: decimal
- *                     description: Indica el precio taotal de la renta del vehiculo
- *                   estado:
- *                     type: enum
- *                     description: Indica el estado de la renta
+ *                     Rentaid:
+ *                       type: integer
+ *                       description: Identificador único de la renta
+ *                     vehiculoid:
+ *                       type: integer
+ *                       description: Identificador único del vehículo
+ *                     clienteId:
+ *                       type: integer
+ *                       description: Identificador único del cliente
+ *                     fechaInicio:
+ *                       type: string
+ *                       format: date
+ *                       description: Indica la fecha inicial de la renta del vehículo
+ *                     fechaFin:
+ *                       type: string
+ *                       format: date
+ *                       description: Indica la fecha final de la renta del vehículo
+ *                     precioTotal:
+ *                       type: number
+ *                       format: float
+ *                       description: Indica el precio total de la renta del vehículo
+ *                     estado:
+ *                       type: string
+ *                       description: Indica el estado de la renta
  *                
  *       400:
  *         description: Error en la consulta
@@ -240,7 +239,7 @@ ruta.get('/listar', controladorRenta.listar);
  *                   description: "Error en el servidor"
  */
 ruta.post('/guardar',
-    body("cliente").isLength({ min: 1, max: 50 }).withMessage("El nombre del cliente debe tener entre 3 y 50 caracteres")
+    body("clienteId").isLength({ min: 1, max: 50 }).withMessage("El nombre del cliente debe tener entre 3 y 50 caracteres")
         .custom(async value => {
             if (!value) {
                 throw new Error('El nombre del cliente no puede ser nulo');
@@ -258,6 +257,7 @@ ruta.post('/guardar',
     controladorRenta.guardar
 );
 
+
 /**
  * @swagger
  * /renta/editar:
@@ -267,7 +267,7 @@ ruta.post('/guardar',
  *       [Rentas]
  *     parameters:
  *       - in: query
- *         name:  Rentaid
+ *         name: Rentaid
  *         required: true
  *         description: Identificador único de la renta a modificar
  *         schema:
@@ -279,29 +279,29 @@ ruta.post('/guardar',
  *           schema:
  *             type: object
  *             properties:
- *                   Rentaid:
- *                     type: integer
- *                     description: Identificador único de la renta
  *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico de vehiculo
+ *                     type: integer
+ *                     description: Identificador único del vehículo
  *                   clienteId:
- *                     type: interger
- *                     description: Identificador unico de clienteid
+ *                     type: integer
+ *                     description: Identificador único del cliente
  *                   fechaInicio:
- *                     type: date
- *                     description: Indica la fecha inicial de la renta del vehiculo
+ *                     type: string
+ *                     format: date
+ *                     description: Indica la fecha inicial de la renta del vehículo
  *                   fechaFin:
- *                     type: date
- *                     description: Indica la fecha final de la renta del vehiculo
+ *                     type: string
+ *                     format: date
+ *                     description: Indica la fecha final de la renta del vehículo
  *                   precioTotal:
- *                     type: decimal
- *                     description: Indica el precio taotal de la renta del vehiculo
+ *                     type: number
+ *                     format: float
+ *                     description: Indica el precio total de la renta del vehículo
  *                   estado:
- *                     type: enum
+ *                     type: string
  *                     description: Indica el estado de la renta
  *     responses:
- *       201:
+ *       200:
  *         description: Renta modificada con éxito
  *         content: 
  *           application/json:
@@ -314,27 +314,30 @@ ruta.post('/guardar',
  *                 data:
  *                   type: object
  *                   properties:
-*                   Rentaid:
- *                     type: integer
- *                     description: Identificador único de la renta
- *                   vehiculoid:
- *                     type: interger
- *                     description: Identificar unico del vehiculo
- *                   clienteId:
- *                     type: interger
- *                     description: Identificador unico del clienteid
- *                   fechaInicio:
- *                     type: date
- *                     description: Indica la fecha inicial de la renta del vehiculo
- *                   fechaFin:
- *                     type: date
- *                     description: Indica la fecha final de la renta del vehiculo
- *                   precioTotal:
- *                     type: decimal
- *                     description: Indica el precio taotal de la renta del vehiculo
- *                   estado:
- *                     type: enum
- *                     description: Indica el estado de la renta
+ *                     Rentaid:
+ *                       type: integer
+ *                       description: Identificador único de la renta
+ *                     vehiculoid:
+ *                       type: integer
+ *                       description: Identificador único del vehículo
+ *                     clienteId:
+ *                       type: integer
+ *                       description: Identificador único del cliente
+ *                     fechaInicio:
+ *                       type: string
+ *                       format: date
+ *                       description: Indica la fecha inicial de la renta del vehículo
+ *                     fechaFin:
+ *                       type: string
+ *                       format: date
+ *                       description: Indica la fecha final de la renta del vehículo
+ *                     precioTotal:
+ *                       type: number
+ *                       format: float
+ *                       description: Indica el precio total de la renta del vehículo
+ *                     estado:
+ *                       type: string
+ *                       description: Indica el estado de la renta
  *       400:
  *         description: Error en la consulta
  *         content:
@@ -380,7 +383,7 @@ ruta.put('/editar',
  *       [Rentas]
  *     parameters:
  *       - in: query
- *         name:  Rentaid
+ *         name: Rentaid
  *         required: true
  *         description: Identificador único de la renta a eliminar
  *         schema:
@@ -399,7 +402,7 @@ ruta.put('/editar',
  *                 data:
  *                   type: object
  *                   properties:
- *                     idPago:
+ *                     Rentaid:
  *                       type: integer
  *                       description: Identificador único de la renta eliminada
  *       400:

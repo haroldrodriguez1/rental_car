@@ -4,6 +4,8 @@ const controladorMantenimiento = require ('../controladores/controladorMantenimi
 const modeloMantenimiento = require("../modelos/mantenimiento")
 const { body, query } = require('express-validator')
 const rutas = Router();
+const modeloVehiculo = require('../modelos/vehiculo')
+const { validationResult } = require('express-validator');
 
 
 /**
@@ -13,14 +15,13 @@ const rutas = Router();
  *     description: Operaciones relacionadas con los mantenimientos
  * 
  */
-
 /**
  * @swagger
  * /mantenimiento/listar:
  *   get:
  *     summary: Obtiene la lista de los mantenimientos
  *     tags: 
- *         [Mantenimiento]
+ *       [Mantenimiento]
  *     responses:
  *       200:
  *         description: Lista de los mantenimientos obtenidos con éxito
@@ -46,7 +47,7 @@ const rutas = Router();
  *                   vehiculoid:
  *                     type: integer
  *                     description: Indicador unico del vehiculo
-*        400:
+ *       400:
  *         description: Error en la consulta 
  *         content:
  *           application/json:
@@ -56,68 +57,6 @@ const rutas = Router();
  *                 msg:
  *                   type: string
  *                   description: "Error en la consulta "
- *        500:
- *         description: Error en el servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: "Error en el servidor"
- * 
- */
-
-rutas.get('/listar', controladorMantenimiento.listar)
-
-/**
- * @swagger
- * /mantenimiento/buscaridmantenimiento:
- *   get:
- *     summary: Busca un mantenimiento por su ID
- *     tags: 
- *        [Mantenimiento]
- *     parameters:
- *         in: query
- *         name: IdMantenimiento
- *         schema:
- *           type: integer
- *         required: true
- *         description: Identificador único del mantenimiento a buscar
- *     responses:
- *       200:
- *         description: Mantenimiento encontrado con éxito
- *         content: 
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                   IdMantenimiento:
- *                     type: integer
- *                     description: Identificador único del mantenimiento
- *                   descripcion:
- *                     type: varchar(250)
- *                     description: Descripcion del mantenimiento
- *                   costo:
- *                     type: double
- *                     description: Costo del mantenimiento
- *                   fecha_mantenimiento:
- *                     type: date
- *                     description: Indica la fecha del mantenimiento
- *                   vehiculoid:
- *                     type: integer
- *                     description: Indicador unico del vehiculo
- *       400:
- *         description: Error en la consulta
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: "Error en la consulta"
  *       500:
  *         description: Error en el servidor
  *         content:
@@ -130,27 +69,98 @@ rutas.get('/listar', controladorMantenimiento.listar)
  *                   description: "Error en el servidor"
  */
 
+
+rutas.get('/listar', controladorMantenimiento.listar)
+
+/**
+* @swagger
+* /mantenimiento/buscaridmantenimiento:
+*   get:
+*     summary: Busca un mantenimiento por su ID
+*     tags: 
+*       [Mantenimiento]
+*     parameters:
+*       - in: query
+*         name: vehiculoid
+*         schema:
+*           type: integer
+*         required: true
+*         description: Identificador único del vehiculo a buscar
+*     responses:
+*       200:
+*         content: 
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 vehiculoid:
+*                   type: integer
+*                   description: Identificador único del vehiculo
+*                 marca:
+*                   type: string
+*                   description: Descripcion de la marca del vehiculo
+*                 modelo:
+*                   type: string
+*                   description: Descripcion del modelo del vehiculo
+*                 año:
+*                   type: integer
+*                   description: Año del vehiculo
+*                 precioPorDia:
+*                   type: number
+*                   format: decimal
+*                   description: Indica el precio por dia
+*                 tipoVehiculo:
+*                   type: string
+*                   description: Tipo de vehiculo
+*                 estado:
+*                   type: boolean
+*                   description: Indica el estado del carro
+*                 placa:
+*                   type: string
+*                   description: Placa del vehiculo
+*       400:
+*         description: Error en la consulta
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 msg:
+*                   type: string
+*                   description: "Error en la consulta"
+*       500:
+*         description: Error en el servidor
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 msg:
+*                   type: string
+*                   description: "Error en el servidor"
+*/
+
+
 rutas.get('/buscaridmantenimiento',
-    query('IdMantenimiento').notEmpty().withMessage('El campo IdMantenimiento no puede estar vacío')
-        .isInt().withMessage('El IdMantenimiento debe ser un número entero'),
+    query('vehiculoid').notEmpty().withMessage('El campo vehiculoid no puede estar vacío')
+        .isInt().withMessage('El vehiculoid debe ser un número entero'),
         async(req, res ) =>{
             try {
                 const errores = validationResult(req);
                 if(!errores.isEmpty()){
                     return  res.status(400).json({errores});
                 }
-                const { IdMantenimiento } = req.query
-                const mantenimiento = await modeloMantenimiento.findByPk(IdMantenimiento);
+                const { vehiculoid } = req.query
+                const vehiculo = await modeloVehiculo.findByPk(vehiculoid);
 
-                if(!mantenimiento){
-                     return res.status(404).json({campo: "IdMantenimiento", msj: "Este mantenimiento no existe"});
+                if(!vehiculo){
+                     return res.status(404).json({campo: "vehiculoid", msj: "Este vehiculo no existe"});
                 }
-                return controladorMantenimiento.buscarIdmantenimiento(req, res);
+                return controladorMantenimiento.buscarIdvehiculo(req, res);
             }   catch (error) {
                     return res.status(500).json({msg: "Error en el servidor "});
             }
         },
-        controladorMantenimiento.buscarIdmantenimiento
 );
 
 /**
@@ -159,29 +169,29 @@ rutas.get('/buscaridmantenimiento',
  *   post:
  *     summary: Guarda un nuevo mantenimiento
  *     tags: 
- *        [Mantenimiento]
+ *       [Mantenimiento]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *            properties:
- *                   IdMantenimiento:
- *                     type: integer
- *                     description: Identificador único del mantenimiento
- *                   descripcion:
- *                     type: varchar(250)
- *                     description: Descripcion del mantenimiento
- *                   costo:
- *                     type: double
- *                     description: Costo del mantenimiento
- *                   fecha_mantenimiento:
- *                     type: date
- *                     description: Indica la fecha del mantenimiento
- *                   vehiculoid:
- *                     type: integer
- *                     description: Indicador unico del vehiculo
+ *             properties:
+ *               IdMantenimiento:
+ *                 type: integer
+ *                 description: Identificador único del mantenimiento
+ *               descripcion:
+ *                 type: string
+ *                 description: Descripción del mantenimiento
+ *               costo:
+ *                 type: double
+ *                 description: Costo del mantenimiento
+ *               fecha_mantenimiento:
+ *                 type: date
+ *                 description: Indica la fecha del mantenimiento
+ *               vehiculoid:
+ *                 type: integer
+ *                 description: Indicador único del vehículo
  *     responses:
  *       201:
  *         description: Mantenimiento guardado con éxito
@@ -195,22 +205,22 @@ rutas.get('/buscaridmantenimiento',
  *                   description: Mensaje del estado de la acción
  *                 data:
  *                   type: object
- *                  properties:
- *                   IdMantenimiento:
- *                     type: integer
- *                     description: Identificador único del mantenimiento
- *                   descripcion:
- *                     type: varchar(250)
- *                     description: Descripcion del mantenimiento
- *                   costo:
- *                     type: double
- *                     description: Costo del mantenimiento
- *                   fecha_mantenimiento:
- *                     type: date
- *                     description: Indica la fecha del mantenimiento
- *                   vehiculoid:
- *                     type: integer
- *                     description: Indicador unico del vehiculo
+ *                   properties:
+ *                     IdMantenimiento:
+ *                       type: integer
+ *                       description: Identificador único del mantenimiento
+ *                     descripcion:
+ *                       type: string
+ *                       description: Descripción del mantenimiento
+ *                     costo:
+ *                       type: double
+ *                       description: Costo del mantenimiento
+ *                     fecha_mantenimiento:
+ *                       type: date
+ *                       description: Indica la fecha del mantenimiento
+ *                     vehiculoid:
+ *                       type: integer
+ *                       description: Indicador único del vehículo
  *       400:
  *         description: Error en la consulta
  *         content:
@@ -233,6 +243,7 @@ rutas.get('/buscaridmantenimiento',
  *                   description: "Error en el servidor"
  */
 
+
 rutas.post('/guardar', 
     body("IdMantenimiento").isInt().withMessage("El id del mantenimiento debe ser un numero entero")
     .custom(async value =>{
@@ -241,7 +252,7 @@ rutas.post('/guardar',
         }
         else{
             const mantenimiento = await modeloMantenimiento.findOne({
-                where: {codigo: value}
+                where: {IdMantenimiento: value}
             });
             if(mantenimiento){
                 throw new Error('El Id del mantenimiento ya existe');
@@ -256,8 +267,8 @@ rutas.post('/guardar',
             throw new Error('El costo no permite nulos')
         }
     }), 
-    body("fecha_pago").isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
-    body("vehiculoid").isInt().withMessage("El id del vehiculo debe ser un numero entero"),
+    body("fecha_mantenimiento").isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
+    body("vehiculoId").isInt().withMessage("El id del vehiculo debe ser un numero entero"),
     controladorMantenimiento.guardar)
 
 /**
@@ -269,7 +280,7 @@ rutas.post('/guardar',
  *       [Mantenimiento]
  *     parameters:
  *       - in: query
- *         name:  IdMantenimiento
+ *         name: IdMantenimiento
  *         required: true
  *         description: Identificador único del mantenimiento a modificar
  *         schema:
@@ -280,22 +291,22 @@ rutas.post('/guardar',
  *         application/json:
  *           schema:
  *             type: object
- *              properties:
- *                   IdMantenimiento:
- *                     type: integer
- *                     description: Identificador único del mantenimiento 
- *                   descripcion:
- *                     type: varchar(250)
- *                     description: Descripcion del mantenimiento (opcional)
- *                   costo:
- *                     type: double
- *                     description: Costo del mantenimiento (opcional)
- *                   fecha_mantenimiento:
- *                     type: date
- *                     description: Indica la fecha del mantenimiento (opcional)
- *                   vehiculoid:
- *                     type: integer
- *                     description: Indicador unico del vehiculo (opcional)
+ *             properties:
+ *               IdMantenimiento:
+ *                 type: integer
+ *                 description: Identificador único del mantenimiento 
+ *               descripcion:
+ *                 type: varchar(250)
+ *                 description: Descripcion del mantenimiento (opcional)
+ *               costo:
+ *                 type: double
+ *                 description: Costo del mantenimiento (opcional)
+ *               fecha_mantenimiento:
+ *                 type: date
+ *                 description: Indica la fecha del mantenimiento (opcional)
+ *               vehiculoid:
+ *                 type: integer
+ *                 description: Indicador unico del vehiculo (opcional)
  *     responses:
  *       201:
  *         description: Mantenimiento modificado con éxito
@@ -310,21 +321,21 @@ rutas.post('/guardar',
  *                 data:
  *                   type: object
  *                   properties:
- *                   IdMantenimiento:
- *                     type: integer
- *                     description: Identificador único del mantenimiento
- *                   descripcion:
- *                     type: varchar(250)
- *                     description: Descripcion del mantenimiento
- *                   costo:
- *                     type: double
- *                     description: Costo del mantenimiento
- *                   fecha_mantenimiento:
- *                     type: date
- *                     description: Indica la fecha del mantenimiento
- *                   vehiculoid:
- *                     type: integer
- *                     description: Indicador unico del vehiculo
+ *                     IdMantenimiento:
+ *                       type: integer
+ *                       description: Identificador único del mantenimiento
+ *                     descripcion:
+ *                       type: varchar(250)
+ *                       description: Descripcion del mantenimiento
+ *                     costo:
+ *                       type: double
+ *                       description: Costo del mantenimiento
+ *                     fecha_mantenimiento:
+ *                       type: date
+ *                       description: Indica la fecha del mantenimiento
+ *                     vehiculoid:
+ *                       type: integer
+ *                       description: Indicador unico del vehiculo
  *       400:
  *         description: Error en la consulta
  *         content:
@@ -357,7 +368,7 @@ rutas.put('/editar',
         }
         else{
             const mantenimiento = await modeloMantenimiento.findOne({
-                where: {codigo: value}
+                where: {IdMantenimiento: value}
             });
             if(!mantenimiento){
                 throw new Error('El id del mantenimiento no existe');
@@ -372,7 +383,7 @@ rutas.put('/editar',
             throw new Error('El costo no permite nulos')
         }
     }), 
-    body("fecha_pago").optional().isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
+    body("fecha_mantenimienti").optional(),
     body("vehiculoid").optional().isInt().withMessage("El id del vehiculo debe ser un numero entero"),
         controladorMantenimiento.modificar)
 
@@ -385,7 +396,7 @@ rutas.put('/editar',
  *   delete:
  *     summary: Elimina un mantenimiento existente
  *     tags:
- *       [Mantenmiento]
+ *       [Mantenimiento]
  *     parameters:
  *       - in: query
  *         name:  IdMantenimiento

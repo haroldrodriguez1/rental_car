@@ -22,9 +22,17 @@ const Mantenimiento = db.define(
         type: sequelize.DATE,
         allowNull: false
 
-      }
+      },
+      vehiculoId: {  
+        type: sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'vehiculos',  
+            key: 'vehiculoid'  
+        }
 
     },
+  },
 
     {
         tableName: "mantenimientos",
