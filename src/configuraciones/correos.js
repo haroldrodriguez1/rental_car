@@ -2,12 +2,16 @@ const nodemailer = require('nodemailer')
 const {USUARIO_CORREO, CONTRASENA_CORREO, SERVICIO_CORREO } = process.env; 
 exports.enviarCorreo = async(datos)=>{
     const transporte = nodemailer.createTransport({
-        host: SERVICIO_CORREO,
-        auth : {
+        service:'gmail',
+        host: SERVICIO_CORREO,                             
+        auth: {
             user: USUARIO_CORREO,
             pass: CONTRASENA_CORREO
+        },
+        tls: {
+            rejectUnauthorized: false 
         }
-    })
+    });
     const optCorreo = {
         from: USUARIO_CORREO,
         to: datos.para,

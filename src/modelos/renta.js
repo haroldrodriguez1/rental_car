@@ -19,7 +19,7 @@ const Renta = db.define(
       },
     },
     clienteId: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
          model: 'clientes',

@@ -5,9 +5,10 @@ const Cliente = db.define(
     "cliente",
     {
         clienteId:{
-            type: sequelize.STRING(20),
+            type: sequelize.INTEGER,
             allowNull: false,
             primaryKey: true, 
+            autoIncrement: true,
             
         },
         primernombre: {

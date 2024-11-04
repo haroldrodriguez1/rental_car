@@ -7,6 +7,10 @@ const modeloServicio = require('../modelos/servicioAdicional');
 
 
 
+
+
+
+
 exports.inicio = (req, res) => {
     var info = {
         rutas: [
@@ -35,6 +39,7 @@ exports.listar = async (req, res) => {
             include:[
                 modeloSeguro,
                 modeloServicio
+
             ]
         })
             .then((data) => {

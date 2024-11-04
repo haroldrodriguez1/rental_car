@@ -9,7 +9,7 @@ const ClienteTelefono = db.define(
             allowNull: false,
         },
         clienteId: {
-            type: sequelize.STRING(20),
+            type: sequelize.INTEGER,
             references: {
                 model: 'clientes', 
                 key: 'clienteId',         

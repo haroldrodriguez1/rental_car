@@ -3,6 +3,8 @@ const { body, query } = require('express-validator');
 const modeloSeguro = require('../modelos/seguro');
 const controladorSeguro = require('../controladores/controladorSeguro');
 const ruta = Router();
+const {  verificarUsuario } = require('../configuraciones/passport')
+
 
 /**
  * @swagger
@@ -128,7 +130,7 @@ const ruta = Router();
 ruta.get('/', controladorSeguro.inicio);
 
 
-ruta.get('/listar',controladorSeguro.listar);
+ruta.get('/listar',verificarUsuario,controladorSeguro.listar);
 
 ruta.post('/guardar', 
     body("nombre").isLength({min: 3, max:50}).withMessage("El limite de caracteres es de 3 - 50")

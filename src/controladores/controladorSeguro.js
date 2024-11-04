@@ -1,5 +1,7 @@
 const modeloSeguro = require('../modelos/seguro');
 const { validationResult } = require('express-validator');
+const { Token } = require('../configuraciones/passport')
+
 
 exports.inicio = (req, res)=>{
     var info = {

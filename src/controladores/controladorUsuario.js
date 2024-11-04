@@ -1,4 +1,5 @@
 const modeloUsuario = require('../modelos/usuario')
+const { enviarCorreo } = require('../configuraciones//correos')
 const crypto = require('crypto')
 const { validationResult } = require('express-validator');
 const { Op } = require('sequelize')
@@ -26,6 +27,12 @@ exports.generarPin = async (req, res) =>{
             var usuario = await modeloUsuario.findOne({where: {correo: correo}});
             usuario.pin=generarPin();
             await usuario.save();
+            enviarCorreo({
+                para: correo,
+                asunto: 'Recuperacion de contrasena',
+                descripcion: 'Recuperacion de contrasena',
+                html: '<h1>PIN: ' + usuario.pin + '</h1><p>Hola</p>'
+            });
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.json({msg: "Correo enviado "});
@@ -68,7 +75,7 @@ exports.actualizarContrasena = async (req, res) =>{
             });
             usuario.contrasena = hash;
             usuario.pin = '000000'
-            await usuario.update();
+            await usuario.save();
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.json({msg: "Registro actualizado "});
@@ -83,69 +90,55 @@ exports.actualizarContrasena = async (req, res) =>{
     }
      
 }
-exports.IniciarSesion = async (req, res) =>{
+exports.IniciarSesion = async (req, res) => {
     const errores = validationResult(req);
-    var ers =[];
-    errores.errors.forEach(e =>{
-        ers.push({campo: e.path, msj: e.msg});
-    })
-    if(ers.length>0){
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json({ers});
+    const ers = [];
+
+    errores.errors.forEach(e => {
+        ers.push({ campo: e.path, msj: e.msg });
+    });
+
+    if (ers.length > 0) {
+        return res.status(200).json({ ers });
     }
-    else{
-        try {
-            const { login, contrasena } = req.body;
-            var usuario = await modeloUsuario.findOne(
-                {where: 
-                    {   [Op.or]:{
-                        correo:login, 
-                        nombre: login
-                    },
-                    estado: 'AC'
-                        
-                    }
-                });
-           if(!usuario){
-            res.statusCode = 400;
-            res.setHeader("Content-Type", "application/json");
-            res.json({msg: "Usuario o contrasena incorrectos "});
-           }
-           else{
-           if( await argon2.verify(usuario.contrasena, contrasena)){
-            usuario.intentos = 0
-            await usuario.save();
-            const token = getToken({id: usuario.id})
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json({token});
-           }else{
-            usuario.intentos += 1;
-            if(usuario.intentos == 5){
-                usuario.estado = 'BL'
+
+    try {
+        const { login, contrasena } = req.body;
+
+        const usuario = await modeloUsuario.findOne({
+            where: {
+                [Op.or]: {
+                    correo: login,
+                    nombreUsuario: login
+                },
+                estado: 'AC'
             }
-            res.statusCode = 400;
-            res.setHeader("Content-Type", "application/json");
-            res.json({msg: "Usuario o contrasena incorrectos "});
-           }
-            usuario.contrasena = hash;
-            usuario.pin = '000000'
-            await usuario.update();
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json({token});
-           }
-    
-        } catch (error) {
-            console.log(error);
-            res.statusCode = 500;
-            res.setHeader("Content-Type", "application/json");
-            res.json({msg: "Error en el servidor"});
+        });
+
+        if (!usuario) {
+            return res.status(400).json({ msg: "Usuario o contraseña incorrectos" });
         }
+
+        if (await argon2.verify(usuario.contrasena, contrasena)) {
+            usuario.intentos = 0;
+            await usuario.save();
+
+            const token = getToken({ id: usuario.id });
+            return res.status(200).json({ token });
+        } else {
+            usuario.intentos += 1;
+            if (usuario.intentos === 5) {
+                usuario.estado = 'BL';
+            }
+            await usuario.save();
+
+            return res.status(400).json({ msg: "Usuario o contraseña incorrectos" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ msg: "Error en el servidor" });
     }
-     
-}
+};
 
 
 exports.error = async(req, res)=>{
