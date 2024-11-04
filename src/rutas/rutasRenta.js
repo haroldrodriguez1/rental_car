@@ -142,6 +142,28 @@ ruta.get('/listar', controladorRenta.listar);
  *                   description: "Error en el servidor"
  */
 
+ruta.get('/buscarRentaid',
+    query('Rentaid').notEmpty().withMessage('El campo Rentaid no puede estar vacío')
+        .isInt().withMessage('El Rentaid debe ser un número entero'),
+        async(req, res ) =>{
+            try {
+                const errores = validationResult(req);
+                if(!errores.isEmpty()){
+                    return res.status(400).json({errores});
+                }
+                const { Rentaid } = req.query;
+                const renta = await modeloRenta.findByPk(Rentaid);
+
+                if(!renta){
+                     return res.status(404).json({campo: "Rentaid", msj: "Esta renta no existe"});
+                }
+                return controladorRenta.buscarRentaid(req, res);
+            } catch (error) {
+                    return res.status(500).json({msg: "Error en el servidor "});
+            }
+        },
+        controladorRenta.buscarRentaid
+);
 /**
  * @swagger
  * /renta/guardar:

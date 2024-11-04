@@ -151,6 +151,28 @@ ruta.get('/listar', controladorVehiculo.listar);
  *                   type: string
  *                   description: "Error en el servidor"
  */
+ruta.get('/buscarvehiculoid',
+    query('Vehiculoid').notEmpty().withMessage('El campo Vehiculoid no puede estar vacío')
+        .isInt().withMessage('El Vehiculoid debe ser un número entero'),
+        async(req, res ) =>{
+            try {
+                const errores = validationResult(req);
+                if(!errores.isEmpty()){
+                    return res.status(400).json({errores});
+                }
+                const { Vehiculoid } = req.query;
+                const vehiculo = await modeloVehiculo.findByPk(Vehiculoid);
+
+                if(!vehiculo){
+                     return res.status(404).json({campo: "Vehiculoid", msj: "Este vehículo no existe"});
+                }
+                return controladorVehiculo.buscarIdVehiculo(req, res);
+            } catch (error) {
+                    return res.status(500).json({msg: "Error en el servidor "});
+            }
+        },
+        controladorVehiculo.buscarVehiculoid
+);
 
 /**
  * @swagger
