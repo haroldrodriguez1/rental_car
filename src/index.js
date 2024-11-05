@@ -38,6 +38,12 @@ db.authenticate()
         modeloUsuario.hasMany(modeloCliente)
         modeloCliente.belongsTo(modeloUsuario)
 
+        modeloCliente.hasMany(modeloClienteDireccion)
+        modeloClienteDireccion.belongsTo(modeloCliente)
+
+        modeloCliente.hasMany(modeloClienteTelefono)
+        modeloClienteTelefono.belongsTo(modeloCliente)
+
 
 
         await modeloSeguro.sync().then((data) => {
