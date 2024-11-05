@@ -6,11 +6,6 @@ const modeloServicio = require('../modelos/servicioAdicional');
 
 
 
-
-
-
-
-
 exports.inicio = (req, res) => {
     var info = {
         rutas: [
@@ -143,7 +138,7 @@ exports.modificar = async (req, res) => {
             const { id } = req.query;
             await modeloRenta.update(
                 { ...req.body },
-                { where: { id: id } }
+                { where: { Rentaid: id } }
             )
                 .then((data) => {
                     res.statusCode = 200;
@@ -178,7 +173,7 @@ exports.eliminar = async (req, res) => {
     } else {
         try {
             const { id } = req.query;
-            await modeloRenta.destroy({ where: { id: id } })
+            await modeloRenta.destroy({ where: { Rentaid: id } })
                 .then((data) => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "application/json");

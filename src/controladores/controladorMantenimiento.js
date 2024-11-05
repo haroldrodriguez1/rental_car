@@ -115,10 +115,10 @@ exports.modificar = async(req,res)=>{
 
     }else{
         try {
-            const { id } = req.query
+            const { IdMantenimiento } = req.query
             await modeloMantenimiento.update(
                 {...req.body},
-                { where:{IdMantenimiento: id} })
+                { where:{IdMantenimiento: IdMantenimiento} })
             .then((data)=>{
                 res.statusCode = 200
                 res.setHeader("Content-Type", "application/json")
@@ -161,9 +161,9 @@ exports.eliminar = async(req,res)=>{
 
     }else{
         try {
-            const { id } = req.query
+            const { IdMantenimiento } = req.query
             await modeloMantenimiento.destroy(
-                { where:{id: id} })
+                { where:{IdMantenimiento: IdMantenimiento} })
             .then((data)=>{
                 res.statusCode = 200
                 res.setHeader("Content-Type", "application/json")
