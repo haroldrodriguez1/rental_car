@@ -6,6 +6,7 @@ const { body, query } = require('express-validator')
 const rutas = Router();
 const modeloVehiculo = require('../modelos/vehiculo')
 const { validationResult } = require('express-validator');
+const { verificarUsuario } = require('../configuraciones/passport');
 
 
 /**
@@ -70,7 +71,7 @@ const { validationResult } = require('express-validator');
  */
 
 
-rutas.get('/listar', controladorMantenimiento.listar)
+rutas.get('/listar',verificarUsuario, controladorMantenimiento.listar)
 
 /**
 * @swagger
@@ -268,7 +269,7 @@ rutas.post('/guardar',
         }
     }), 
     body("fecha_mantenimiento").isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
-    body("vehiculoId").isInt().withMessage("El id del vehiculo debe ser un numero entero"),
+    body("vehiculoId").isInt().withMessage("El id del vehiculo debe ser un numero entero"), verificarUsuario,
     controladorMantenimiento.guardar)
 
 /**
@@ -361,7 +362,7 @@ rutas.post('/guardar',
 
 
 rutas.put('/editar', 
-    body("IdMantenimiento").isInt().withMessage("El id del mantenimiento debe ser un numero entero")
+    query("IdMantenimiento").isInt().withMessage("El id del mantenimiento debe ser un numero entero")
     .custom(async value =>{
         if(!value){
             throw new Error('El IdMantenimiento no permite nulos')
@@ -384,7 +385,7 @@ rutas.put('/editar',
         }
     }), 
     body("fecha_mantenimienti").optional(),
-    body("vehiculoid").optional().isInt().withMessage("El id del vehiculo debe ser un numero entero"),
+    body("vehiculoid").optional().isInt().withMessage("El id del vehiculo debe ser un numero entero"), verificarUsuario,
         controladorMantenimiento.modificar)
 
 
@@ -452,13 +453,13 @@ rutas.put('/editar',
                 }
                 else{
                     const mantenimiento = await modeloMantenimiento.findOne({
-                        where: {id: value}
+                        where: {IdMantenimiento: value}
                     });
                     if(!mantenimiento){
                         throw new Error('El id del mantenimiento no existe');
                     }
                 }
-            }),
+            }),verificarUsuario,
             controladorMantenimiento.eliminar);
 
         module.exports = rutas;

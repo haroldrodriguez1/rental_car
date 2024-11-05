@@ -25,7 +25,7 @@ exports.inicio = (req, res) => {
 
 exports.listar = async (req, res) => {
     try {
-        await modeloVehiculo.findAll()
+        await modeloVehiculo.findOne()
             .then((data) => {
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");
@@ -44,14 +44,13 @@ exports.listar = async (req, res) => {
         res.json({ msg: "Error en el servidor" });
     }
 }
-
-exports.buscarVehiculoid = async (req, res) => {
+exports.buscarIdvehiculo = async (req, res) => {
     
     try {
-        const { Vehiculoid } = req.query;
+        const {  vehiculoid } = req.query;
         await modeloVehiculo.findAll({
             where: {
-                Vehiculoid
+                vehiculoid
             }
         })
         .then((data)=>{
@@ -72,6 +71,7 @@ exports.buscarVehiculoid = async (req, res) => {
             res.json({msg: "Error en el servidor"});
     }
 }
+
 
 
 exports.guardar = async (req, res) => {
@@ -122,7 +122,7 @@ exports.modificar = async (req, res) => {
             const { id } = req.query;
             await modeloVehiculo.update(
                 { ...req.body },
-                { where: { id: id } }
+                { where: { vehiculoid: id } }
             )
                 .then((data) => {
                     res.statusCode = 200;
@@ -157,7 +157,7 @@ exports.eliminar = async (req, res) => {
     } else {
         try {
             const { id } = req.query;
-            await modeloVehiculo.destroy({ where: { id: id } })
+            await modeloVehiculo.destroy({ where: { vehiculoid: id } })
                 .then((data) => {
                     res.statusCode = 200;
                     res.setHeader("Content-Type", "application/json");

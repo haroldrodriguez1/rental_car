@@ -3,7 +3,8 @@ const { Router } = require('express')
 const controladorPago = require ('../controladores/controladorPago')
 const modeloPago = require("../modelos/pago")
 const { validationResult } = require('express-validator');
-const { body, query } = require('express-validator')
+const { body, query } = require('express-validator');
+const { verificarUsuario } = require('../configuraciones/passport');
 const rutas = Router();
 
 
@@ -69,7 +70,7 @@ const rutas = Router();
  */
 
 
-rutas.get('/listar', controladorPago.listar)
+rutas.get('/listar',verificarUsuario, controladorPago.listar)
 
 /**
  * @swagger
@@ -149,7 +150,7 @@ rutas.get('/buscaridpago',
             }   catch (error) {
                     return res.status(500).json({msg: "Error en el servidor "});
             }
-        },
+        },verificarUsuario,
         controladorPago.buscarIdPago
 );
 
@@ -257,7 +258,7 @@ rutas.post('/guardar',
     }), 
     body("metodo_pago").isIn(['Tarjeta', 'Efectivo', 'Transferencia', 'Cheque']).withMessage("Solo permite valores como 'Tarjeta', 'Efectivo', 'Transferencia', 'Cheque'"),
     body("fecha_pago").isDate({ format: 'YYYY-MM-DD' }).withMessage("La fecha debe estar en formato YYYY-MM-DD"),
-    body("rentaId").isInt().withMessage("El id de la renta debe ser un numero entero"),
+    body("rentaId").isInt().withMessage("El id de la renta debe ser un numero entero"),verificarUsuario,
     controladorPago.guardar)
 
 /**
@@ -350,7 +351,7 @@ rutas.post('/guardar',
 
 
 rutas.put('/editar', 
-    body("IdPago").isInt().withMessage("El id del pago debe ser un numero entero")
+    query("IdPago").isInt().withMessage("El id del pago debe ser un numero entero")
     .custom(async value =>{
         if(!value){
             throw new Error('El IdPago no permite nulos')
@@ -373,7 +374,7 @@ rutas.put('/editar',
     }), 
     body("metodo_pago").optional().isIn(['Tarjeta', 'Efectivo', 'Transferencia', 'Cheque']).withMessage("Solo permite valores como 'Tarjeta', 'Efectivo', 'Transferencia', 'Cheque'"),
     body("fecha_pago").optional(),
-    body("rentaId").optional().isInt().withMessage("El id de la renta debe ser un numero entero"),
+    body("rentaId").optional().isInt().withMessage("El id de la renta debe ser un numero entero"),verificarUsuario,
         controladorPago.modificar)
 
 
@@ -445,7 +446,7 @@ rutas.put('/editar',
                         throw new Error('El id del pago no existe');
                     }
                 }
-            }),
+            }),verificarUsuario,
             controladorPago.eliminar);
 
         module.exports = rutas;

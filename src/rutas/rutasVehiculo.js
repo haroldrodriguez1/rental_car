@@ -1,7 +1,8 @@
 const { Router } = require('express');
-const { body, query } = require('express-validator');
+const { body, query, validationResult } = require('express-validator');
 const modeloVehiculo = require('../modelos/vehiculo');
 const controladorVehiculo = require('../controladores/controladorVehiculo');
+const { verificarUsuario } = require('../configuraciones/passport');
 const ruta = Router();
 
 /**
@@ -81,7 +82,7 @@ ruta.get('/', controladorVehiculo.inicio);
 
 
 
-ruta.get('/listar', controladorVehiculo.listar);
+ruta.get('/listar', verificarUsuario,controladorVehiculo.listar);
 
 /**
  * @swagger
@@ -152,26 +153,25 @@ ruta.get('/listar', controladorVehiculo.listar);
  *                   description: "Error en el servidor"
  */
 ruta.get('/buscarvehiculoid',
-    query('Vehiculoid').notEmpty().withMessage('El campo Vehiculoid no puede estar vacío')
-        .isInt().withMessage('El Vehiculoid debe ser un número entero'),
+    query('vehiculoid').notEmpty().withMessage('El campo vehiculoid no puede estar vacío')
+        .isInt().withMessage('El vehiculoid debe ser un número entero'),
         async(req, res ) =>{
             try {
                 const errores = validationResult(req);
                 if(!errores.isEmpty()){
-                    return res.status(400).json({errores});
+                    return  res.status(400).json({errores});
                 }
-                const { Vehiculoid } = req.query;
-                const vehiculo = await modeloVehiculo.findByPk(Vehiculoid);
+                const { vehiculoid } = req.query
+                const vehiculo = await modeloVehiculo.findByPk(vehiculoid);
 
                 if(!vehiculo){
-                     return res.status(404).json({campo: "Vehiculoid", msj: "Este vehículo no existe"});
+                     return res.status(404).json({campo: "vehiculoid", msj: "Este vehiculo no existe"});
                 }
-                return controladorVehiculo.buscarIdVehiculo(req, res);
-            } catch (error) {
+                return controladorVehiculo.buscarIdvehiculo(req, res);
+            }   catch (error) {
                     return res.status(500).json({msg: "Error en el servidor "});
             }
         },
-        controladorVehiculo.buscarVehiculoid
 );
 
 /**
@@ -292,7 +292,7 @@ ruta.post('/guardar',
             if (buscarPlaca) {
                 throw new Error('La placa del vehículo ya existe');
             }
-        }),
+        }), verificarUsuario,
     controladorVehiculo.guardar
 );
 
@@ -411,7 +411,7 @@ ruta.post('/guardar',
 ruta.put('/editar',
     query("id").isInt().withMessage('El ID debe ser un valor entero')
         .custom(async value => {
-            const buscarVehiculo = await modeloVehiculo.findOne({ where: { id: value } });
+            const buscarVehiculo = await modeloVehiculo.findOne({ where: { vehiculoid: value } });
             if (!buscarVehiculo) {
                 throw new Error('El ID del vehículo no existe');
             }
@@ -419,7 +419,7 @@ ruta.put('/editar',
     body("marca").optional().isLength({ min: 3, max: 50 }).withMessage("La marca debe tener entre 3 y 50 caracteres"),
     body("modelo").optional().isLength({ min: 1, max: 50 }).withMessage("El modelo debe tener entre 1 y 50 caracteres"),
     body("año").optional().isInt({ min: 1900, max: new Date().getFullYear() }).withMessage("El año debe ser un valor válido"),
-    body("placa").optional().isLength({ min: 1, max: 20 }).withMessage("La placa debe tener entre 1 y 20 caracteres"),
+    body("placa").optional().isLength({ min: 1, max: 20 }).withMessage("La placa debe tener entre 1 y 20 caracteres"), verificarUsuario,
     controladorVehiculo.modificar
 );
 
@@ -478,11 +478,11 @@ ruta.put('/editar',
 ruta.delete('/eliminar',
     query("id").isInt().withMessage('El ID debe ser un valor entero')
         .custom(async value => {
-            const buscarVehiculo = await modeloVehiculo.findOne({ where: { id: value } });
+            const buscarVehiculo = await modeloVehiculo.findOne({ where: { vehiculoid: value } });
             if (!buscarVehiculo) {
                 throw new Error('El ID del vehículo no existe');
             }
-        }),
+        }), verificarUsuario,
     controladorVehiculo.eliminar
 );
 

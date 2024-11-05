@@ -177,7 +177,7 @@ ruta.put('/editar',
     }),
     body("nombre").optional().isLength({ min: 3, max: 50 }).withMessage("El límite de caracteres es de 3 - 50"),
     body("direccion").optional().isLength({ min: 3 }).withMessage("La dirección es obligatoria"),
-    body("telefono").optional().isLength({ max: 15 }).withMessage("El límite de caracteres es de 15"),
+    body("telefono").optional().isLength({ max: 15 }).withMessage("El límite de caracteres es de 15"),verificarUsuario,
     controladorEmpresa.modificar
 );
 
@@ -214,7 +214,7 @@ ruta.delete('/eliminar',
                 throw new Error('El id de la empresa no existe');
             }
         }
-    }),
+    }),verificarUsuario,
     controladorEmpresa.eliminar
 );
 
