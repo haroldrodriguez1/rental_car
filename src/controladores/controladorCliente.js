@@ -115,58 +115,50 @@ exports.guardar = async (req, res) => {
 
 exports.modificar = async (req, res) => {
     const errores = validationResult(req);
-    var ers =[];
-    errores.errors.forEach(e =>{
-        ers.push({campo: e.path, msj: e.msg});
-    })
-    if(ers.length>0){
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json({ers});
+    const ers = [];
+    
+    errores.errors.forEach(e => {
+        ers.push({ campo: e.path, msj: e.msg });
+    });
+
+    if (ers.length > 0) {
+        res.status(200).json({ ers });
+        return;
     }
-    else{
-        try {
-            const { id } = req.query;
-            const { telefonos, direcciones } = req.body;
-            const t = await db.transaction();
-            await modeloCliente.update(
-                {...req.body},
-                {transaction: t},
-                { where: { id: id}})
-            .then(async(data)=>{
-                const telefonosCliente = telefonos.map((f)=>({
-                    numero: f.numero,
-                    clienteId: id
-                }));
-                await modeloClienteTelefono.destroy({where: {clienteId:id}}, {transaction: t});
-                await modeloClienteTelefono.bulkCreate(telefonosCliente, {transaction: t});
-                const direccionesCliente = direcciones.map((f)=>({
-                    descripcion: f.descripcon,
-                    clienteId: id
-                }));
-                await modeloClienteDireccion.destroy({where: {clienteId:id}}, {transaction: t});
-                await modeloClienteDireccion.bulkCreate(direccionesCliente, {transaction: t});
-                await t.commit();
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.json({msg: "Registro actualizado "+ data});        
-            })
-            .catch(async(er)=>{
-                await t.rollback();
-                console.log(er);
-                res.statusCode = 200;
-                res.setHeader("Content-Type", "application/json");
-                res.json({msg: "Error en la consulta"});
-            });
-        } catch (error) {
-            await t.rollback();
-            console.log(error);
-            res.statusCode = 500;
-            res.setHeader("Content-Type", "application/json");
-            res.json({msg: "Error en el servidor"});
-        }
+
+    const { id } = req.query;
+    const { telefonos, direcciones } = req.body;
+    let t; 
+    try {
+        t = await db.transaction();
+        await modeloCliente.update(
+            { ...req.body },
+            { 
+                where: { clienteId: id },
+                transaction: t
+            }
+        );
+        const telefonosCliente = telefonos.map(f => ({
+            numero: f.numero,
+            clienteId: id
+        }));
+        await modeloClienteTelefono.destroy({ where: { clienteId: id }, transaction: t });
+        await modeloClienteTelefono.bulkCreate(telefonosCliente, { transaction: t });
+        const direccionesCliente = direcciones.map(f => ({
+            descripcion: f.descripcion,
+            clienteId: id
+        }));
+        await modeloClienteDireccion.destroy({ where: { clienteId: id }, transaction: t });
+        await modeloClienteDireccion.bulkCreate(direccionesCliente, { transaction: t });
+        await t.commit();
+        res.status(200).json({ msg: "Registro actualizado" });
+
+    } catch (error) {
+        if (t) await t.rollback(); 
+        console.error(error);
+        res.status(500).json({ msg: "Error en el servidor" });
     }
-}
+};
 
 exports.eliminar = async (req, res) => {
     const errores = validationResult(req);
@@ -185,7 +177,7 @@ exports.eliminar = async (req, res) => {
             const t = await db.transaction();
             await modeloClienteTelefono.destroy({where: {clienteId:id}}, {transaction: t});
             await modeloClienteDireccion.destroy({where: {clienteId:id}}, {transaction: t});
-            const cliente = await modeloCliente.findOne({ where: { id: id}});
+            const cliente = await modeloCliente.findOne({ where: { clienteId: id}});
             const usuarioId = cliente.usuarioId;
             await cliente.destroy({transaction: t});
             await modeloUsuario.destroy({ where: { id: usuarioId}}, {transaction: t});

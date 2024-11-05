@@ -146,7 +146,7 @@ ruta.put('/editar',
             throw new Error('El id no permite nulos');
         } else {
             const buscarCliente = await modeloCliente.findOne({
-                where: { id: value }
+                where: { clienteId: value }
             });
             if (!buscarCliente) {
                 throw new Error('El id del cliente no existe');
@@ -197,7 +197,7 @@ ruta.delete('/eliminar',
             throw new Error('El id no permite nulos');
         } else {
             const buscarCliente = await modeloCliente.findOne({
-                where: { id: value }
+                where: { clienteId: value }
             });
             if (!buscarCliente) {
                 throw new Error('El id del cliente no existe');
