@@ -228,16 +228,16 @@ ruta.get('/buscaridempleado',
  */
 
 
-
+ 
 ruta.post('/guardar', 
-    body("nombre").isLength({min: 3, max:50}).withMessage("El limite de caracteres es de 3 - 50")
+    body("nombre_empleado").isLength({min: 3, max:50}).withMessage("El limite de caracteres es de 3 - 50")
     .custom(async value =>{
         if(!value){
             throw new Error('El nombre no permite nulos')
         }
         else{
             const buscarEmpleado = await modeloEmpleado.findOne({
-                where: {nombre: value}
+                where: {nombre_empleado: value}
             });
             console.log(buscarEmpleado);
             if(buscarEmpleado){
@@ -245,7 +245,7 @@ ruta.post('/guardar',
             }
         }
     }),
-    controladorEmpleado.guardar);
+    controladorEmpleado.guardar); 
 
 
 /**
@@ -339,28 +339,28 @@ ruta.post('/guardar',
 
 
 ruta.put('/editar', 
-        query("id").isInt().withMessage('Solo se permiten valores enteros en el id')
+        query("id_empleado").isInt().withMessage('Solo se permiten valores enteros en el id')
         .custom(async value =>{
             if(!value){
                 throw new Error('El id no permite nulos')
             }
             else{
                 const buscarEmpleado = await modeloEmpleado.findOne({
-                    where: {id: value}
+                    where: {id_empleado: value}
                 });
                 if(!buscarEmpleado){
                     throw new Error('El id del empleado no existe');
                 }
             }
         }),
-        body("nombre").optional().isLength({min: 3, max:50}).withMessage("El limite de caracteres es de 3 - 50")
+        body("nombre_empleado").optional().isLength({min: 3, max:50}).withMessage("El limite de caracteres es de 3 - 50")
         .custom(async value =>{
             if(!value){
                 throw new Error('El nombre no permite nulos')
             }
             else{
                 const buscarEmpleado = await modeloEmpleado.findOne({
-                    where: {nombre: value}
+                    where: {nombre_empleado: value}
                 });
                 console.log(buscarEmpleado);
                 if(buscarEmpleado){
@@ -426,14 +426,14 @@ ruta.put('/editar',
  *                   description: Error en el servidor
  */
 ruta.delete('/eliminar', 
-    query("id").isInt().withMessage('Solo de permiten valores enteros en el id')
+    query("id_empleado").isInt().withMessage('Solo de permiten valores enteros en el id')
     .custom(async value =>{
         if(!value){
             throw new Error('El id no permite nulos')
         }
         else{
             const buscarEmpleado = await modeloEmpleado.findOne({
-                where: {id: value}
+                where: {id_empleado: value}
             });
             if(!buscarEmpleado){
                 throw new Error('El id del empleado no existe');

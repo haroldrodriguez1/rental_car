@@ -8,6 +8,7 @@ const modeloPago = require('./modelos/pago')
 const modeloMantenimiento = require('./modelos/mantenimiento')
 const modeloServicio = require('./modelos/servicioAdicional')
 const modeloCliente = require('./modelos/cliente')
+const modeloEmpleado = require('./modelos/empleado')
 const modeloUsuario = require('./modelos/usuario')
 const modeloSucursal = require('./modelos/sucursal')
 const modeloEmpresa = require('./modelos/empresa')
@@ -47,6 +48,10 @@ db.authenticate()
 
 
         await modeloSeguro.sync().then((data) => {
+            console.log("Modelo seguro creado correctamente");
+        });
+
+        await modeloEmpleado.sync().then((data) => {
             console.log("Modelo seguro creado correctamente");
         });
         await modeloUsuario.sync().then((data) => {

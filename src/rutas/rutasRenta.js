@@ -77,6 +77,7 @@ ruta.get('/', controladorRenta.inicio);
 
 
 ruta.get('/listar', verificarUsuario, controladorRenta.listar);
+ruta.get('/misRentas', verificarUsuario, controladorRenta.listarRentaid);
 
 /**
  * @swagger

@@ -27,12 +27,12 @@ exports.generarPin = async (req, res) =>{
             var usuario = await modeloUsuario.findOne({where: {correo: correo}});
             usuario.pin=generarPin();
             await usuario.save();
-            enviarCorreo({
+           /*  enviarCorreo({
                 para: correo,
                 asunto: 'Recuperacion de contrasena',
                 descripcion: 'Recuperacion de contrasena',
                 html: '<h1>PIN: ' + usuario.pin + '</h1><p>Este es su PIN para actualizar contraseña</p>'
-            });
+            }); */
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.json({msg: "Correo enviado "});
@@ -74,7 +74,8 @@ exports.actualizarContrasena = async (req, res) =>{
                 parallelism: 2
             });
             usuario.contrasena = hash;
-            usuario.pin = '000000'
+            usuario.pin = '000000';
+            usuario.intentos = 0;
             await usuario.save();
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
@@ -124,7 +125,7 @@ exports.IniciarSesion = async (req, res) => {
             await usuario.save();
 
             const token = getToken({ id: usuario.id });
-            return res.status(200).json({ token });
+            return res.status(200).json({ usuario , token });
         } else {
             usuario.intentos += 1;
             if (usuario.intentos === 5) {
@@ -132,7 +133,7 @@ exports.IniciarSesion = async (req, res) => {
             }
             await usuario.save();
 
-            return res.status(400).json({ msg: "Usuario o contraseña incorrectos" });
+            return res.json({ error: "Usuario o contraseña incorrectos" });
         }
     } catch (error) {
         console.error(error);

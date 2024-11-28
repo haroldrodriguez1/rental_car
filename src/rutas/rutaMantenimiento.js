@@ -246,20 +246,6 @@ rutas.get('/buscaridmantenimiento',
 
 
 rutas.post('/guardar', 
-    body("IdMantenimiento").isInt().withMessage("El id del mantenimiento debe ser un numero entero")
-    .custom(async value =>{
-        if(!value){
-            throw new Error('El IdMantenimiento no permite nulos')
-        }
-        else{
-            const mantenimiento = await modeloMantenimiento.findOne({
-                where: {IdMantenimiento: value}
-            });
-            if(mantenimiento){
-                throw new Error('El Id del mantenimiento ya existe');
-            }
-        }
-    }),
     body("descripcion").isLength({ min: 10, max:120 }).withMessage("El limite de caracteres es de 120"),
     body("costo").isFloat({ min: 0 }).withMessage("El costo debe ser un número positivo")
     .isLength({max:12}).withMessage("El limite de caracteres es de 12")
@@ -445,7 +431,7 @@ rutas.put('/editar',
  */
 
 
-        rutas.delete('/eliminar', 
+        rutas.put('/eliminar', 
             query("IdMantenimiento").isInt().withMessage("El id del mantenimiento debe ser un numero entero")
             .custom(async value =>{
                 if(!value){

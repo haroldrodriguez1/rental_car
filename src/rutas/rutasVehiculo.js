@@ -171,7 +171,7 @@ ruta.get('/buscarvehiculoid',
             }   catch (error) {
                     return res.status(500).json({msg: "Error en el servidor "});
             }
-        }, verificarUsuario,
+        },
 );
 
 /**
