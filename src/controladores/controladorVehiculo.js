@@ -25,7 +25,7 @@ exports.inicio = (req, res) => {
 
 exports.listar = async (req, res) => {
     try {
-        await modeloVehiculo.findOne()
+        await modeloVehiculo.findAll()
             .then((data) => {
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/json");

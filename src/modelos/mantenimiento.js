@@ -8,7 +8,8 @@ const Mantenimiento = db.define(
        IdMantenimiento:{
         type: sequelize.INTEGER,
         allowNull: false,
-        primaryKey:true
+        primaryKey:true,
+        autoIncrement: true
        },
        descripcion:{
         type: sequelize.STRING(120),
@@ -30,8 +31,11 @@ const Mantenimiento = db.define(
             model: 'vehiculos',  
             key: 'vehiculoid'  
         }
-
     },
+    activo: {
+      type: sequelize.BOOLEAN,
+      defaultValue: true, 
+    }
   },
 
     {

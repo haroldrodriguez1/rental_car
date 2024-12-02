@@ -144,47 +144,45 @@ exports.modificar = async(req,res)=>{
    
 }
 
-exports.eliminar = async(req,res)=>{
-    console.log(req.body)
+exports.eliminar = async (req, res) => {
+    console.log(req.body);
     const errores = validationResult(req);
-    var  ers = []
+    var ers = [];
     errores.errors.forEach(e => {
         ers.push({
             campo: e.path, msj: e.msg
-        })
+        });
     });
-   
-    if(ers.length>0){
-        res.statusCode = 200
-            res.setHeader("Content-Type", "application/json")
-            res.json({ers})
 
-    }else{
+    if (ers.length > 0) {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json({ ers });
+    } else {
         try {
-            const { IdMantenimiento } = req.query
-            await modeloMantenimiento.destroy(
-                { where:{IdMantenimiento: IdMantenimiento} })
-            .then((data)=>{
-                res.statusCode = 200
-                res.setHeader("Content-Type", "application/json")
-                res.json({msg: "Registro eliminado", data})
-    
-            })
-            .catch((err)=>{
-                console.log(err)
-                res.statusCode = 400;
-                res.setHeader("Content-Type", "application/json")
-                res.json({ msg: "Error en la consulta"})
-            })
-    
-        } catch (error) {
-            console.log(error)
-                res.statusCode = 500;
-                res.setHeader("Content-Type", "application/json")
-                res.json({ msg: "Error en el servidor"})
-            
+            const { IdMantenimiento } = req.query;
+            if (!IdMantenimiento) {
+                return res.status(400).json({ msg: "El ID de mantenimiento es requerido" });
             }
+            const data = await modeloMantenimiento.update(
+                { activo: false },  
+                { where: { IdMantenimiento: IdMantenimiento } }
+            );
+
+            if (data[0] === 0) {
+                
+                return res.status(404).json({ msg: "No se encontró el mantenimiento con ese ID" });
+            }
+
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json({ msg: "Mantenimiento ocultado correctamente", data });
+
+        } catch (error) {
+            console.log(error);
+            res.statusCode = 500;
+            res.setHeader("Content-Type", "application/json");
+            res.json({ msg: "Error en el servidor" });
+        }
     }
-    
-   
-}
+};

@@ -190,7 +190,7 @@ ruta.put('/editar',
  *         description: Error en la eliminación
  */
 
-ruta.delete('/eliminar', 
+ruta.put('/eliminar', 
     query("id").isInt().withMessage('Solo se permiten valores enteros en el id')
     .custom(async value => {
         if (!value) {
@@ -206,6 +206,9 @@ ruta.delete('/eliminar',
     }),
     verificarUsuario,
     controladorCliente.eliminar
+);
+ruta.get('/buscarcliente', verificarUsuario,
+    controladorCliente.buscarCliente
 );
 
 module.exports = ruta;

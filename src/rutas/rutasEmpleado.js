@@ -359,8 +359,8 @@ ruta.put('/editar',
                 throw new Error('El nombre no permite nulos')
             }
             else{
-                /* const buscarEmpleado = await modeloEmpleado.findOne({
-                    where: {nombre_empleado: value}
+                const buscarEmpleado = await modeloEmpleado.findOne({
+                    where: {nombre: value}
                 });
                 console.log(buscarEmpleado);
                 if(buscarEmpleado){
