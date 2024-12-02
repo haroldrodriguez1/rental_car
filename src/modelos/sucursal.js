@@ -5,10 +5,12 @@ const Empresa = require('./empresa');
 const Sucursal = db.define(
     "sucursal",
     {
-        codigo: {
-            type: sequelize.STRING(5),
-            allowNull: false
-        },
+        id: {
+            type: sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false,
+          },
         nombre: {
             type: sequelize.STRING(50),
             allowNull: false
@@ -21,20 +23,18 @@ const Sucursal = db.define(
             type: sequelize.STRING(15),
             allowNull: true
         },
-        empresaId: {
-            type: sequelize.INTEGER,
-            references: {
-                model: Empresa,
-                key: 'id'
-            },
-            allowNull: false
-        },
+        estado: {
+            type: sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: true,
+          },
+         
     },
     {
         tableName: "sucursales",
     }
 );
 
-Sucursal.belongsTo(Empresa, { foreignKey: 'empresaId', as: 'empresa' });
+ 
 
 module.exports = Sucursal;

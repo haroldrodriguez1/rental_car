@@ -37,7 +37,7 @@ const ruta = Router();
 
 /**
  * @swagger
- * /sucursal/buscaridempresa:
+ * /sucursal/buscaridSucursal:
  *   get:
  *     summary: Busca sucursales por el ID de la empresa
  *     tags: [Sucursal]
@@ -147,14 +147,14 @@ ruta.get('/', controladorSucursal.inicio);
 
 ruta.get('/listar', controladorSucursal.listar);
 
-ruta.get('/buscaridempresa',
-    query("empresaId").isInt().withMessage("El id de la empresa debe ser un número entero")
+ruta.get('/buscaridSucursal',
+    query("id").isInt().withMessage("El id de la empresa debe ser un número entero")
     .custom(async value => {
         if (!value) {
             throw new Error('El id no permite nulos');
         } else {
-            const buscarEmpresa = await modeloEmpresa.findOne({
-                where: { id: value }
+            const buscarEmpresa = await modeloSucursal.findOne({
+                where: { codigo: value }
             });
             if (!buscarEmpresa) {
                 throw new Error('El id de la empresa no existe');
@@ -165,21 +165,14 @@ ruta.get('/buscaridempresa',
 );
 
 ruta.post('/guardar', 
-    body("codigo").isLength({ min: 2, max: 5 }).withMessage("El límite de caracteres es de 2 - 5"),
+    
     body("nombre").isLength({ min: 3, max: 50 }).withMessage("El límite de caracteres es de 3 - 50"),
-    body("direccion").isLength({ min: 5 }).withMessage("La dirección debe tener al menos 5 caracteres"),
-    body("empresaId").isInt().withMessage("El id de la empresa debe ser un número entero")
+    body("direccion").isLength({ min: 5 }).withMessage("La dirección debe tener al menos 5 caracteres")
+    
     .custom(async value => {
         if (!value) {
             throw new Error('El id no permite nulos');
-        } else {
-            const buscarEmpresa = await modeloEmpresa.findOne({
-                where: { id: value }
-            });
-            if (!buscarEmpresa) {
-                throw new Error('El id de la empresa no existe');
-            }
-        }
+        } 
     }),
     controladorSucursal.guardar
 );
@@ -195,21 +188,6 @@ ruta.put('/editar',
             });
             if (!buscarSucursal) {
                 throw new Error('El id de la sucursal no existe');
-            }
-        }
-    }),
-    body("codigo").optional().isLength({ min: 2, max: 5 }).withMessage("El límite de caracteres es de 2 - 5"),
-    body("nombre").optional().isLength({ min: 3, max: 50 }).withMessage("El límite de caracteres es de 3 - 50"),
-    body("empresaId").optional().isInt().withMessage("El id de la empresa debe ser un número entero")
-    .custom(async value => {
-        if (!value) {
-            throw new Error('El id no permite nulos');
-        } else {
-            const buscarEmpresa = await modeloEmpresa.findOne({
-                where: { id: value }
-            });
-            if (!buscarEmpresa) {
-                throw new Error('El id de la empresa no existe');
             }
         }
     }),

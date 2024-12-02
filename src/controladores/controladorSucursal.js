@@ -50,7 +50,7 @@ exports.inicio = (req, res) => {
 
 exports.listar = async (req, res) => {
     try {
-        const sucursales = await modeloSucursal.findAll({ include: 'empresas' });
+        const sucursales = await modeloSucursal.findAll({  });
         res.json(sucursales);
     } catch (error) {
         res.status(500).json({ mensaje: 'Error al listar sucursales', error });
@@ -59,10 +59,10 @@ exports.listar = async (req, res) => {
 
 exports.buscarIdEmpresa = async (req, res) => {
     try {
-        const { empresaId } = req.query;
+        const { id } = req.query;
         const sucursales = await modeloSucursal.findAll({
-            where: { empresaId },
-            include: 'empresas'
+            where: { id },
+            /* include: 'empresas' */
         });
         res.json(sucursales);
     } catch (error) {
@@ -72,8 +72,8 @@ exports.buscarIdEmpresa = async (req, res) => {
 
 exports.guardar = async (req, res) => {
     try {
-        const { codigo, nombre, direccion, telefono, empresaId } = req.body;
-        const nuevaSucursal = await modeloSucursal.create({ codigo, nombre, direccion, telefono, empresaId });
+        const { codigo, nombre, direccion, telefono } = req.body;
+        const nuevaSucursal = await modeloSucursal.create({ codigo, nombre, direccion, telefono });
         res.json(nuevaSucursal);
     } catch (error) {
         res.status(500).json({ mensaje: 'Error al guardar sucursal', error });
@@ -83,9 +83,9 @@ exports.guardar = async (req, res) => {
 exports.modificar = async (req, res) => {
     try {
         const { id } = req.query;
-        const { codigo, nombre, direccion, telefono, empresaId } = req.body;
+        const { codigo, nombre, direccion, telefono, estado } = req.body;
         await modeloSucursal.update(
-            { codigo, nombre, direccion, telefono, empresaId },
+            { codigo, nombre, direccion, telefono, estado },
             { where: { id } }
         );
         res.send("Sucursal actualizada correctamente");

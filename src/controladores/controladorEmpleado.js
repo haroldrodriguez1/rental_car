@@ -49,10 +49,10 @@ exports.listar = async (req, res) => {
 exports.buscarIdEmpleado = async (req, res) => {
     
     try {
-        const { IdEmpleado } = req.query;
+        const { id_empleado } = req.query;
         await modeloEmpleado.findAll({
             where: {
-                IdEmpleado
+                id_empleado
             }
         })
         .then((data)=>{
