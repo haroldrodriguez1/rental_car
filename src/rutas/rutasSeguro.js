@@ -183,7 +183,7 @@ ruta.put('/editar',
         body("estado").optional().isBoolean().withMessage("Solo permite valores boleanos"),
         controladorSeguro.modificar);
     
-ruta.delete('/eliminar', 
+ruta.delete('/eliminar', verificarUsuario, 
     query("id").isInt().withMessage('Solo de permiten valores enteros en el id')
     .custom(async value =>{
         if(!value){
@@ -199,5 +199,27 @@ ruta.delete('/eliminar',
         }
     }),
     controladorSeguro.eliminar);
+
+    ruta.get('/buscarseguro', verificarUsuario,
+        /* query('id').notEmpty().withMessage('El campo id no puede estar vacío')
+            .isInt().withMessage('El id debe ser un número entero'),
+            async(req, res ) =>{
+                try {
+                    const errores = validationResult(req);
+                    if(!errores.isEmpty()){
+                        return  res.status(400).json({errores});
+                    }
+                    const { id } = req.query
+                    const seguro = await modeloSeguro.findByPk(id);
+    
+                    if(!seguro){
+                         return res.status(404).json({campo: "id", msj: "Este id no existe"});
+                    }
+                   return  controladorSeguro.buscarSeguro(req, res);
+                }   catch (error) {
+                        return res.status(500).json({msg: "Error en el servidor ruta"});
+                }
+            } */ controladorSeguro.buscarSeguro
+    );
     
 module.exports = ruta;

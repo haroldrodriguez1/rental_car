@@ -1,5 +1,5 @@
 const modeloServicio = require('../modelos/servicioAdicional');
-const { validationResult } = require('express-validator');
+const { validationResult, body } = require('express-validator');
 
 exports.inicio = (req, res)=>{
     var info = {
@@ -93,6 +93,7 @@ exports.modificar = async (req, res) => {
     else{
         try {
             const { id } = req.query;
+            
             await modeloServicio.update(
                 {...req.body},
                 { where: { id: id}})
@@ -148,5 +149,33 @@ exports.eliminar = async (req, res) => {
             res.setHeader("Content-Type", "application/json");
             res.json({msg: "Error en el servidor"});
         }
+    }
+}
+
+exports.buscarServicio = async (req, res) => {
+    
+    try {
+        const {  id } = req.query;
+        await modeloServicio.findAll({
+            where: {
+                id
+            }
+        })
+        .then((data)=>{
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(data);
+        })
+        .catch((er)=>{
+            console.log(er);
+            res.statusCode = 400;
+            res.setHeader("Content-Type", "application/json");
+            res.json({msg: "Error en la consulta"});
+        });
+    } catch (error) {
+        console.log(error);
+            res.statusCode = 500;
+            res.setHeader("Content-Type", "application/json");
+            res.json({msg: "Error en el servidor"});
     }
 }
