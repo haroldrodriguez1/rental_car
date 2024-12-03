@@ -4,12 +4,12 @@ const db = require('../configuraciones/db');
 const Cliente = db.define(
     "cliente",
     {
-        clienteId:{
+        clienteId: {
             type: sequelize.INTEGER,
             allowNull: false,
-            primaryKey: true, 
+            primaryKey: true,
             autoIncrement: true,
-            
+
         },
         primernombre: {
             type: sequelize.STRING(50),
@@ -27,18 +27,27 @@ const Cliente = db.define(
             type: sequelize.STRING(50),
             allowNull: true,
         },
-        imagen:{
+        imagen: {
             type: sequelize.STRING(250),
-            allowNull: true
+            allowNull: true,
+            defaultValue: 'image'
+
         },
-        estado:{
+        nombreImagen
+            : {
+            type: sequelize.STRING,
+            allowNull: true,
+            defaultValue: 'image'
+  
+        },
+        estado: {
             type: sequelize.ENUM('AC', 'IN', 'BL'),
             allowNull: true,
             defaultValue: 'AC'
         }
     },
     {
-        tableName:"clientes",
+        tableName: "clientes",
     }
 );
 module.exports = Cliente;

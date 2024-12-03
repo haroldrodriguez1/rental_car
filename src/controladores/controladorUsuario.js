@@ -27,12 +27,12 @@ exports.generarPin = async (req, res) =>{
             var usuario = await modeloUsuario.findOne({where: {correo: correo}});
             usuario.pin=generarPin();
             await usuario.save();
-           /*  enviarCorreo({
+             enviarCorreo({
                 para: correo,
                 asunto: 'Recuperacion de contrasena',
                 descripcion: 'Recuperacion de contrasena',
                 html: '<h1>PIN: ' + usuario.pin + '</h1><p>Este es su PIN para actualizar contraseña</p>'
-            }); */
+            }); 
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.json({msg: "Correo enviado "});

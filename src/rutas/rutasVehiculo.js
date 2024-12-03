@@ -2,8 +2,16 @@ const { Router } = require('express');
 const { body, query, validationResult } = require('express-validator');
 const modeloVehiculo = require('../modelos/vehiculo');
 const controladorVehiculo = require('../controladores/controladorVehiculo');
+const archivosController = require('../controladores/archivos/controladorArchivos');
 const { verificarUsuario } = require('../configuraciones/passport');
 const ruta = Router();
+
+const imagenValidationRules = [
+    body('img').isEmpty().withMessage('La imagen es obligatoria')
+];
+
+// Reglas de validación
+
 
 /**
  * @swagger

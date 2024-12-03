@@ -37,7 +37,7 @@ const ruta = Router();
 
 /**
  * @swagger
- * /sucursal/buscaridSucursal:
+ * /sucursal/buscaridempresa:
  *   get:
  *     summary: Busca sucursales por el ID de la empresa
  *     tags: [Sucursal]
@@ -153,7 +153,7 @@ ruta.get('/buscaridSucursal',
         if (!value) {
             throw new Error('El id no permite nulos');
         } else {
-            const buscarEmpresa = await modeloSucursal.findOne({
+            const buscarEmpresa = await modeloSucursal.findAll({
                 where: { codigo: value }
             });
             if (!buscarEmpresa) {
@@ -165,14 +165,13 @@ ruta.get('/buscaridSucursal',
 );
 
 ruta.post('/guardar', 
-    
     body("nombre").isLength({ min: 3, max: 50 }).withMessage("El límite de caracteres es de 3 - 50"),
     body("direccion").isLength({ min: 5 }).withMessage("La dirección debe tener al menos 5 caracteres")
-    
     .custom(async value => {
         if (!value) {
             throw new Error('El id no permite nulos');
         } 
+        
     }),
     controladorSucursal.guardar
 );
@@ -183,11 +182,25 @@ ruta.put('/editar',
         if (!value) {
             throw new Error('El id no permite nulos');
         } else {
-            const buscarSucursal = await modeloSucursal.findOne({
-                where: { id: value }
+            const buscarSucursal = await modeloSucursal.findAll({
+                where: { codigo: value }
             });
             if (!buscarSucursal) {
                 throw new Error('El id de la sucursal no existe');
+            }
+        }
+    }),
+    body("codigo").optional().isLength({ min: 2, max: 5 }).withMessage("El límite de caracteres es de 2 - 5"),
+    body("nombre").optional().isLength({ min: 3, max: 50 }).withMessage("El límite de caracteres es de 3 - 50")
+    .custom(async value => {
+        if (!value) {
+            throw new Error('El id no permite nulos');
+        } else {
+            const buscarEmpresa = await modeloSucursal.findAll({
+                where: { codigo: value }
+            });
+            if (!buscarEmpresa) {
+                throw new Error('El id de la empresa no existe');
             }
         }
     }),

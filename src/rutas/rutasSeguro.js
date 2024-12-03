@@ -165,7 +165,21 @@ ruta.put('/editar',
                 }
             }
         }),
-        
+        body("nombre").optional().isLength({min: 3, max:50}).withMessage("El limite de caracteres es de 3 - 50")
+        .custom(async value =>{
+            if(!value){
+                throw new Error('El nombre no permite nulos')
+            }
+            else{
+                const buscarSeguro = await modeloSeguro.findOne({
+                    where: {nombre: value}
+                });
+                console.log(buscarSeguro);
+                if(buscarSeguro){
+                    throw new Error('El nombre del seguro ya existe');
+                }
+            }
+        }),
         body("estado").optional().isBoolean().withMessage("Solo permite valores boleanos"),
         controladorSeguro.modificar);
     

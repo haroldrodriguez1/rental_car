@@ -1,6 +1,8 @@
 const modeloVehiculo = require('../modelos/vehiculo');
 const { validationResult } = require('express-validator');
-
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 exports.inicio = (req, res) => {
     var info = {
         rutas: [
@@ -83,7 +85,7 @@ exports.guardar = async (req, res) => {
     if (ers.length > 0) {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json({ ers });
+        res.json({ ers }); 
     } else {
         try {
             await modeloVehiculo.create({ ...req.body })
@@ -91,6 +93,7 @@ exports.guardar = async (req, res) => {
                     res.statusCode = 201;
                     res.setHeader("Content-Type", "application/json");
                     res.json({ msg: "Registro de vehículo guardado", data });
+               
                 })
                 .catch((er) => {
                     console.log(er);
@@ -106,6 +109,7 @@ exports.guardar = async (req, res) => {
         }
     }
 }
+
 
 exports.modificar = async (req, res) => {
     const errores = validationResult(req);

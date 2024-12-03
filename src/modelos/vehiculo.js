@@ -31,15 +31,23 @@ const Vehiculo = db.define(
       type: DataTypes.STRING(50), 
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.ENUM('disponible', 'rentado', 'mantenimiento'),
+    estado: {   
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: 'disponible',
+      defaultValue: true,
     },
     placa: {
       type: DataTypes.STRING(10),
       allowNull: false,
       unique: true,
+    },
+    imagen: {
+      type: DataTypes.STRING,
+      defaultValue: 'image',
+    }, 
+    nombreImagen: {
+      type: DataTypes.STRING,
+      defaultValue: 'image',
     },
   },
   {

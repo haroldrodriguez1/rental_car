@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
 const helmet = require('helmet');
 const modeloSeguro = require('./modelos/seguro');
 const modeloRenta = require('./modelos/renta');
@@ -125,10 +126,12 @@ app.use('/api/clientetelefono', require('./rutas/rutaClienteTelefono'));
 app.use('/api/clientedireccion', require('./rutas/rutaClienteDireccion'));
 app.use('/api/sucursal', require('./rutas/rutaSucursal'));
 app.use('/api/empresa', require('./rutas/rutaEmpresas'));
-
+app.use('/api/archivos', require('./rutas/rutasArchivos'));
+app.use('/uploads', express.static(path.join(__dirname, 'img/Vehiculos')));
+app.use('/clientesIMG', express.static(path.join(__dirname, 'img/Clientes')));
 
 app.use('/api/pago', require('./rutas/rutaPago'));
-
+ 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(process.env.PORT, () => {

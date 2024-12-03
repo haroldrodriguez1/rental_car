@@ -5,17 +5,16 @@ const Empresa = require('./empresa');
 const Sucursal = db.define(
     "sucursal",
     {
-        id: {
+        codigo: {
             type: sequelize.INTEGER,
             primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-          },
+             autoIncrement: true
+        },
         nombre: {
             type: sequelize.STRING(50),
             allowNull: false
         },
-        direccion: {
+        direccion: { 
             type: sequelize.TEXT,
             allowNull: false
         },
@@ -28,13 +27,14 @@ const Sucursal = db.define(
             allowNull: false,
             defaultValue: true,
           },
-         
+
+        
     },
     {
         tableName: "sucursales",
     }
 );
 
- 
+
 
 module.exports = Sucursal;

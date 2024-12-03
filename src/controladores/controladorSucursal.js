@@ -50,7 +50,7 @@ exports.inicio = (req, res) => {
 
 exports.listar = async (req, res) => {
     try {
-        const sucursales = await modeloSucursal.findAll({  });
+        const sucursales = await modeloSucursal.findAll();
         res.json(sucursales);
     } catch (error) {
         res.status(500).json({ mensaje: 'Error al listar sucursales', error });
@@ -61,8 +61,8 @@ exports.buscarIdEmpresa = async (req, res) => {
     try {
         const { id } = req.query;
         const sucursales = await modeloSucursal.findAll({
-            where: { id },
-            /* include: 'empresas' */
+            where: { codigo :id },
+
         });
         res.json(sucursales);
     } catch (error) {
@@ -72,8 +72,8 @@ exports.buscarIdEmpresa = async (req, res) => {
 
 exports.guardar = async (req, res) => {
     try {
-        const { codigo, nombre, direccion, telefono } = req.body;
-        const nuevaSucursal = await modeloSucursal.create({ codigo, nombre, direccion, telefono });
+        const { codigo, nombre, direccion, telefono, estado } = req.body;
+        const nuevaSucursal = await modeloSucursal.create({ codigo, nombre, direccion, telefono,estado });
         res.json(nuevaSucursal);
     } catch (error) {
         res.status(500).json({ mensaje: 'Error al guardar sucursal', error });
@@ -83,10 +83,10 @@ exports.guardar = async (req, res) => {
 exports.modificar = async (req, res) => {
     try {
         const { id } = req.query;
-        const { codigo, nombre, direccion, telefono, estado } = req.body;
+        const { codigo, nombre, direccion, telefono , estado } = req.body;
         await modeloSucursal.update(
             { codigo, nombre, direccion, telefono, estado },
-            { where: { id } }
+            { where: { codigo: id } }
         );
         res.send("Sucursal actualizada correctamente");
     } catch (error) {
@@ -97,7 +97,7 @@ exports.modificar = async (req, res) => {
 exports.eliminar = async (req, res) => {
     try {
         const { id } = req.query;
-        await modeloSucursal.destroy({ where: { id } });
+        await modeloSucursal.destroy({ where: { codigo:id } });
         res.send("Sucursal eliminada correctamente");
     } catch (error) {
         res.status(500).json({ mensaje: 'Error al eliminar sucursal', error });

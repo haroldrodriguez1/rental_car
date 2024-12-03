@@ -132,23 +132,23 @@ ruta.get('/listar',controladorEmpleado.listar);
 
 
 ruta.get('/buscaridempleado',
-    query('id_empleado').notEmpty().withMessage('El campo IdEmpleado no puede estar vacío')
+    query('IdEmpleado').notEmpty().withMessage('El campo IdEmpleado no puede estar vacío')
         .isInt().withMessage('El IdEmpleado debe ser un número entero'),
         async(req, res ) =>{
             try {
-               /* const errores = validationResult(req);
+                const errores = validationResult(req);
                 if(!errores.isEmpty()){
                     return  res.status(400).json({errores});
                 }
-                 const { id_empleado } = req.query
-                const empleado = await modeloEmpleado.findByPk(id_empleado);
+                const { IdEmpleado } = req.query
+                const empleado = await modeloEmpleado.findByPk(IdEmpleado);
 
                 if(!empleado){
                      return res.status(404).json({campo: "IdEmpleado", msj: "Este empleado no existe"});
-                } */
+                }
                 return controladorEmpleado.buscarIdEmpleado(req, res);
             }   catch (error) {
-                    return res.status(500).json({msg: "Error en el servidor Ruta"});
+                    return res.status(500).json({msg: "Error en el servidor "});
             }
         },
         controladorEmpleado.buscarIdEmpleado
@@ -360,12 +360,12 @@ ruta.put('/editar',
             }
             else{
                 const buscarEmpleado = await modeloEmpleado.findOne({
-                    where: {nombre: value}
+                    where: {nombre_empleado: value}
                 });
                 console.log(buscarEmpleado);
                 if(buscarEmpleado){
                     throw new Error('El nombre del empleado ya existe');
-                } */
+                }
             }
         }),
         body("estado").optional().isBoolean().withMessage("Solo permite valores boleanos"),
